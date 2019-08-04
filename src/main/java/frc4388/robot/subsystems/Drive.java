@@ -8,7 +8,6 @@
 package frc4388.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc4388.controller.XboxTriggerButton;
 
 /**
  * Add your docs here.
