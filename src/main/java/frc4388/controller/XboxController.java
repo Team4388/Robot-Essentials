@@ -60,21 +60,26 @@ public class XboxController implements IHandController
 		return stick;
 	}
 	
+	/**
+	 * Checks if the input falls within the deadzone.
+	 * @param input from an axis on the controller
+	 * @return true if input falls in deadzone, false if input falls outside deadzone
+	 */
 	private boolean inDeadZone(double input){
-		boolean inDeadZone; 
-		if(Math.abs(input) < DEADZONE){
-			inDeadZone = true;
-		}else{
-			inDeadZone = false;
-		}
-		return inDeadZone;
+		return (Math.abs(input) < DEADZONE);
 	}
 
+	/**
+	 * Updates an input to have a deadzone around the 0 position
+	 * @param input from an axis on the controller
+	 * @return updated input
+	 */
 	private double getAxisWithDeadZoneCheck(double input){
 		if(inDeadZone(input)){
-			input = 0.0;       
+			return 0.0;       
+		} else {
+			return input;
 		}
-		return input; 
 	}
 
 	public boolean getAButton(){
@@ -141,9 +146,12 @@ public class XboxController implements IHandController
 		return getAxisWithDeadZoneCheck(stick.getRawAxis(RIGHT_TRIGGER_AXIS)); 
 	}
 
-	/**Returns -1 if nothing is pressed, or the angle of the button pressed 0 = up, 90 = right, etc.*/
+	/**
+	 * Get the angle input from the dpad.
+	 * @return -1 if nothing is pressed, or the angle of the button pressed. 0 = up, 90 = right, etc.
+	 */
 	public int getDpadAngle() {
-		return stick.getPOV();
+		return stick.getPOV(0);
 	}
 
 	public boolean getDPadLeft(){
