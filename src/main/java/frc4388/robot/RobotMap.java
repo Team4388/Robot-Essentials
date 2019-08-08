@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import frc4388.utility.controller.XboxController;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -24,5 +26,16 @@ public class RobotMap {
   // public static int rangefinderPort = 1;
   // public static int rangefinderModule = 1;
 
+  /* Xbox Controllers */
+  public static final int XBOX_DRIVER_ID = 0;
+  public static final int XBOX_OPERATOR_ID = 1;
+
+  /* Blinkin LED Strip */
   public static final int LED_SPARK_ID = 0;
+
+  /* Drive Train */
+  public static final int DRIVE_LEFT_FRONT_CAN_ID = 2;
+  public static final int DRIVE_RIGHT_FRONT_CAN_ID = 4;
+	public static final int DRIVE_LEFT_BACK_CAN_ID = 3;
+	public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
 }
