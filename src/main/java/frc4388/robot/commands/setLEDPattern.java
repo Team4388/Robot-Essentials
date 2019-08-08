@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class setLEDPattern extends Command {
 
-  LEDPatterns pattern;
+  public static LEDPatterns m_pattern;
 
   public setLEDPattern(LEDPatterns pattern) {
-    requires(Robot.led);
-    this.pattern = pattern;
+    requires(Robot.m_led);
+    m_pattern = pattern;
   }
 
   // Called just before this Command runs the first time
@@ -29,7 +29,7 @@ public class setLEDPattern extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.led.setPattern(pattern);
+    Robot.m_led.setPattern(m_pattern);
   }
 
   // Make this return true when this Command no longer needs to run execute()

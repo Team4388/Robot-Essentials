@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc4388.robot.commands.ExampleCommand;
 import frc4388.robot.subsystems.ExampleSubsystem;
 import frc4388.robot.subsystems.LED;
+import frc4388.utility.controller.XboxController;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,7 +26,7 @@ import frc4388.robot.subsystems.LED;
  */
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
-  public static LED led = new LED();
+  public static LED m_led = new LED();
   public static OI m_oi;
 
   Command m_autonomousCommand;

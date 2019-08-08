@@ -1,6 +1,6 @@
-package frc4388.controller;
+package frc4388.utility.controller;
 
-import frc4388.controller.XboxController;
+import frc4388.utility.controller.XboxController;
 
 import edu.wpi.first.wpilibj.buttons.Button;
 

@@ -33,6 +33,10 @@ public enum LEDPatterns {
   
   // GETTERS/SETTERS
   private final float id;
-  LEDPatterns(float id) { this.id = id; }
-  public float getValue() { return id; }
+  LEDPatterns(float id) {
+    this.id = id;
+  }
+  public float getValue() {
+    return id;
+  }
 }
