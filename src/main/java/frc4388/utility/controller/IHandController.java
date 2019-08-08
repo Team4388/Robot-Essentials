@@ -1,4 +1,4 @@
-package frc4388.controller;
+package frc4388.utility.controller;
 
 public interface IHandController {
 
