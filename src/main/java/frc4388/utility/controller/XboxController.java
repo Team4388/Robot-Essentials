@@ -50,14 +50,14 @@ public class XboxController implements IHandController
 
 	private static final double DEADZONE = 0.1;
 
-	private Joystick stick;
+	private Joystick m_stick;
 
 	public XboxController(int portNumber){
-		stick = new Joystick(portNumber);
+		m_stick = new Joystick(portNumber);
 	}
 
 	public Joystick getJoyStick() {
-		return stick;
+		return m_stick;
 	}
 	
 	/**
@@ -83,67 +83,67 @@ public class XboxController implements IHandController
 	}
 
 	public boolean getAButton(){
-		return stick.getRawButton(A_BUTTON);
+		return m_stick.getRawButton(A_BUTTON);
 	}
 
 	public boolean getXButton(){
-		return stick.getRawButton(X_BUTTON);    
+		return m_stick.getRawButton(X_BUTTON);    
 	}
 
 	public boolean getBButton(){
-		return stick.getRawButton(B_BUTTON);
+		return m_stick.getRawButton(B_BUTTON);
 	}
 
 	public boolean getYButton(){
-		return stick.getRawButton(Y_BUTTON);
+		return m_stick.getRawButton(Y_BUTTON);
 	} 
 
 	public boolean getBackButton(){
-		return stick.getRawButton(BACK_BUTTON);
+		return m_stick.getRawButton(BACK_BUTTON);
 	}
 
 	public boolean getStartButton(){
-		return stick.getRawButton(START_BUTTON);
+		return m_stick.getRawButton(START_BUTTON);
 	} 
 
 	public boolean getLeftBumperButton(){
-		return stick.getRawButton(LEFT_BUMPER_BUTTON);
+		return m_stick.getRawButton(LEFT_BUMPER_BUTTON);
 	}
 
 	public boolean getRightBumperButton(){
-		return stick.getRawButton(RIGHT_BUMPER_BUTTON);
+		return m_stick.getRawButton(RIGHT_BUMPER_BUTTON);
 	}
 
 	public boolean getLeftJoystickButton(){
-		return stick.getRawButton(LEFT_JOYSTICK_BUTTON);
+		return m_stick.getRawButton(LEFT_JOYSTICK_BUTTON);
 	}
 
 	public boolean getRightJoystickButton(){
-		return stick.getRawButton(RIGHT_JOYSTICK_BUTTON);
+		return m_stick.getRawButton(RIGHT_JOYSTICK_BUTTON);
 	}
 
 	public double getLeftXAxis(){         
-		return getAxisWithDeadZoneCheck(stick.getRawAxis(LEFT_X_AXIS)); 
+		return getAxisWithDeadZoneCheck(m_stick.getRawAxis(LEFT_X_AXIS)); 
 	}
 
 	public double getLeftYAxis(){
-		return getAxisWithDeadZoneCheck(stick.getRawAxis(LEFT_Y_AXIS));
+		return getAxisWithDeadZoneCheck(m_stick.getRawAxis(LEFT_Y_AXIS));
 	}
 
 	public double getRightXAxis(){
-		return getAxisWithDeadZoneCheck(stick.getRawAxis(RIGHT_X_AXIS));
+		return getAxisWithDeadZoneCheck(m_stick.getRawAxis(RIGHT_X_AXIS));
 	}
 
 	public double getRightYAxis(){
-		return getAxisWithDeadZoneCheck(stick.getRawAxis(RIGHT_Y_AXIS)); 
+		return getAxisWithDeadZoneCheck(m_stick.getRawAxis(RIGHT_Y_AXIS)); 
 	}
 
 	public double getLeftTriggerAxis(){
-		return getAxisWithDeadZoneCheck(stick.getRawAxis(LEFT_TRIGGER_AXIS)); 
+		return getAxisWithDeadZoneCheck(m_stick.getRawAxis(LEFT_TRIGGER_AXIS)); 
 	}
 
 	public double getRightTriggerAxis(){
-		return getAxisWithDeadZoneCheck(stick.getRawAxis(RIGHT_TRIGGER_AXIS)); 
+		return getAxisWithDeadZoneCheck(m_stick.getRawAxis(RIGHT_TRIGGER_AXIS)); 
 	}
 
 	/**
@@ -151,23 +151,23 @@ public class XboxController implements IHandController
 	 * @return -1 if nothing is pressed, or the angle of the button pressed. 0 = up, 90 = right, etc.
 	 */
 	public int getDpadAngle() {
-		return stick.getPOV(0);
+		return m_stick.getPOV(0);
 	}
 
 	public boolean getDPadLeft(){
-      return (stick.getRawAxis(LEFT_RIGHT_DPAD_AXIS) < LEFT_DPAD_TOLERANCE);
+      return (m_stick.getRawAxis(LEFT_RIGHT_DPAD_AXIS) < LEFT_DPAD_TOLERANCE);
   	}
 
   	public boolean getDPadRight(){
-      return (stick.getRawAxis(LEFT_RIGHT_DPAD_AXIS) > RIGHT_DPAD_TOLERANCE);
+      return (m_stick.getRawAxis(LEFT_RIGHT_DPAD_AXIS) > RIGHT_DPAD_TOLERANCE);
   	}
 
   	public boolean getDPadTop(){
-      return (stick.getRawAxis(TOP_BOTTOM_DPAD_AXIS) < TOP_DPAD_TOLERANCE);
+      return (m_stick.getRawAxis(TOP_BOTTOM_DPAD_AXIS) < TOP_DPAD_TOLERANCE);
   	}
 
   	public boolean getDPadBottom(){
-      return (stick.getRawAxis(TOP_BOTTOM_DPAD_AXIS) > BOTTOM_DPAD_TOLERANCE);
+      return (m_stick.getRawAxis(TOP_BOTTOM_DPAD_AXIS) > BOTTOM_DPAD_TOLERANCE);
   	}
 
 	public boolean getLeftTrigger(){
