@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc4388.robot.RobotMap;
+import frc4388.robot.OI;
 import frc4388.robot.Robot;
 import frc4388.utility.controller.XboxController;
 
@@ -27,12 +28,14 @@ public class Drive extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(RobotMap.DRIVE_LEFT_FRONT_CAN_ID);
-  WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(RobotMap.DRIVE_RIGHT_FRONT_CAN_ID);
-  WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(RobotMap.DRIVE_LEFT_BACK_CAN_ID);
-  WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(RobotMap.DRIVE_RIGHT_BACK_CAN_ID);
+  public static WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(RobotMap.DRIVE_LEFT_FRONT_CAN_ID);
+  public static WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(RobotMap.DRIVE_RIGHT_FRONT_CAN_ID);
+  public static WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(RobotMap.DRIVE_LEFT_BACK_CAN_ID);
+  public static WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(RobotMap.DRIVE_RIGHT_BACK_CAN_ID);
 
-  DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  
+  private static double m_inputMove, m_inputSteer;
 
   public Drive(){
     /* factory default values */
@@ -60,6 +63,10 @@ public class Drive extends Subsystem {
 
   @Override
   public void periodic() {
+    m_inputMove = OI.getInstance().getDriverController().getLeftYAxis();
+    m_inputSteer = -(OI.getInstance().getDriverController().getRightXAxis());
+
+    m_driveTrain.arcadeDrive(m_inputMove, m_inputSteer);
   }
 
   @Override
