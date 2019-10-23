@@ -31,7 +31,7 @@ public class Drive extends Subsystem {
   // here. Call these from Commands.
 
   /* false for talon drivetrain, true for spark drivetrain */
-  public static boolean isSpark = true;
+  //public static boolean isSpark = false;
 
   /* talons */
   public static WPI_TalonSRX m_leftFrontMotorTalon = new WPI_TalonSRX(RobotMap.DRIVE_LEFT_FRONT_CAN_ID);
@@ -53,12 +53,8 @@ public class Drive extends Subsystem {
   private static double m_inputMove, m_inputSteer;
 
   public Drive() {
-    if (isSpark) {
-      initSpark();
-    } 
-    else {
-      initTalon();
-    }
+    //initSpark();
+    initTalon();
   }
 
   @Override
