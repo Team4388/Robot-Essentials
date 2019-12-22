@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc4388.robot.RobotMap;
+import frc4388.robot.commands.Drive.DriveWithJoystick;
+import frc4388.robot.commands.Drive.GamerMove;
 import frc4388.robot.OI;
 import frc4388.robot.Robot;
 import frc4388.utility.controller.XboxController;
@@ -61,17 +63,14 @@ public class Drive extends Subsystem {
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
   }
 
-  @Override
-  public void periodic() {
-    m_inputMove = OI.getInstance().getDriverController().getLeftYAxis();
-    m_inputSteer = -(OI.getInstance().getDriverController().getRightXAxis());
-
-    m_driveTrain.arcadeDrive(m_inputMove, m_inputSteer);
+  public void driveWithInput(double move, double steer){
+    m_driveTrain.arcadeDrive(move, steer);
   }
 
   @Override
-  public void initDefaultCommand() {
+  public void initDefaultCommand(){
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new DriveWithJoystick());
   }
 }
