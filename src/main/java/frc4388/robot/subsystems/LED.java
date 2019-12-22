@@ -8,6 +8,7 @@
 package frc4388.robot.subsystems;
 
 import frc4388.robot.RobotMap;
+import frc4388.robot.commands.LED.UpdateLED;
 import frc4388.robot.constants.LEDPatterns;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -27,9 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
     LEDController.set(currentLED);
   }
 
-  public void periodic() {
+  public void updateLED(){
     LEDController.set(currentLED);
-    SmartDashboard.putNumber("LED", currentLED);
   }
 
   public void setPattern(LEDPatterns pattern){
@@ -38,6 +38,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
   }
 
   @Override
+  public void periodic(){
+    SmartDashboard.putNumber("LED", currentLED);
+  }
+
+  @Override
 	public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
+    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new UpdateLED());
   }
 }

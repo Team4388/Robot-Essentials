@@ -5,18 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands;
+package frc4388.robot.commands.LED;
 
 import frc4388.robot.Robot;
 import frc4388.robot.constants.LEDPatterns;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class setLEDPattern extends Command {
+public class SetLEDPattern extends Command {
 
   public static LEDPatterns m_pattern;
 
-  public setLEDPattern(LEDPatterns pattern) {
+  public SetLEDPattern(LEDPatterns pattern) {
     requires(Robot.m_led);
     m_pattern = pattern;
   }

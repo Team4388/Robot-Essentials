@@ -8,6 +8,9 @@
 package frc4388.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc4388.robot.commands.Drive.DriveWithJoystick;
+import frc4388.robot.commands.Drive.GamerMove;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
@@ -46,12 +49,16 @@ public class OI {
 
   private static OI instance;
   
-  private static XboxController m_driverXbox;
+  public static XboxController m_driverXbox;
   private static XboxController m_operatorXbox;
 
   public OI() {
     m_driverXbox = new XboxController(RobotMap.XBOX_DRIVER_ID);
     m_operatorXbox = new XboxController(RobotMap.XBOX_OPERATOR_ID);
+
+    JoystickButton GamerMove = new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON);
+    GamerMove.whenPressed(new GamerMove());
+    GamerMove.whenReleased(new DriveWithJoystick());
   }
 
   public static OI getInstance() {
@@ -73,5 +80,10 @@ public class OI {
   public Joystick getOperatorJoystick()
   {
     return m_operatorXbox.getJoyStick();
+  }
+
+  public Joystick getDriverJoystick()
+  {
+    return m_driverXbox.getJoyStick();
   }
 }
