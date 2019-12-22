@@ -5,16 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.Drive;
+package frc4388.robot.commands.LED;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc4388.robot.Robot;
 
-public class GamerMove extends Command {
-  public GamerMove() {
+public class UpdateLED extends Command {
+  public UpdateLED() {
     // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(Robot.m_Drive);
+    requires(Robot.m_led);
   }
 
   // Called just before this Command runs the first time
@@ -25,7 +24,7 @@ public class GamerMove extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_Drive.driveWithInput(0, 1);
+    Robot.m_led.updateLED();
   }
 
   // Make this return true when this Command no longer needs to run execute()

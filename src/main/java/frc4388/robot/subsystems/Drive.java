@@ -67,12 +67,8 @@ public class Drive extends Subsystem {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
-  public void gamerMove(){
-    m_driveTrain.arcadeDrive(0, 1);
-  }
-
   @Override
-  public void initDefaultCommand() {
+  public void initDefaultCommand(){
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
     setDefaultCommand(new DriveWithJoystick());
