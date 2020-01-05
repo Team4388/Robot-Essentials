@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
     LEDController = new Spark(RobotMap.LED_SPARK_ID);
     setPattern(LEDPatterns.FOREST_WAVES);
     LEDController.set(currentLED);
+    System.err.println("In the Beginning, there was Joe.\nAnd he said, 'Let there be LEDs.'\nAnd it was good.");
   }
 
   public void updateLED(){
