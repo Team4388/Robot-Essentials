@@ -7,8 +7,6 @@
 
 package frc4388.robot;
 
-import frc4388.utility.controller.XboxController;
-
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
