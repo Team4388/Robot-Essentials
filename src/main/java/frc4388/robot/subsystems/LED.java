@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.LEDConstants;
-import frc4388.robot.constants.LEDPatterns;
+import frc4388.utility.LEDPatterns;
 
 /**
  * Allows for the control of a 5v LED Strip using a Rev Robotics Blinkin LED
