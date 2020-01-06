@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.LEDConstants;
-import frc4388.robot.constants.LEDPatterns;
+import frc4388.utility.LEDPatterns;
 
 /**
  * Allows for the control of a 5v LED Strip using a Rev Robotics Blinkin LED
@@ -23,6 +23,9 @@ public class LED extends SubsystemBase {
   public static float currentLED;
   public static Spark LEDController;
 
+  /**
+   * Add your docs here.
+   */
   public LED(){
     LEDController = new Spark(LEDConstants.LED_SPARK_ID);
     setPattern(LEDPatterns.FOREST_WAVES);
@@ -30,10 +33,16 @@ public class LED extends SubsystemBase {
     System.err.println("In the Beginning, there was Joe.\nAnd he said, 'Let there be LEDs.'\nAnd it was good.");
   }
 
+  /**
+   * Add your docs here.
+   */
   public void updateLED(){
     LEDController.set(currentLED);
   }
 
+  /**
+   * Add your docs here.
+   */
   public void setPattern(LEDPatterns pattern){
     currentLED = pattern.getValue();
     LEDController.set(currentLED);
@@ -43,11 +52,4 @@ public class LED extends SubsystemBase {
   public void periodic(){
     SmartDashboard.putNumber("LED", currentLED);
   }
-
-  /* @Override
-	public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new UpdateLED());
-  } */
 }

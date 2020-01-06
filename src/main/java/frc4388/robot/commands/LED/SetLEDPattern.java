@@ -9,8 +9,8 @@ package frc4388.robot.commands.LED;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-import frc4388.robot.constants.LEDPatterns;
 import frc4388.robot.subsystems.LED;
+import frc4388.utility.LEDPatterns;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -20,6 +20,9 @@ public class SetLEDPattern extends InstantCommand {
   private final LED m_led;
   public static LEDPatterns m_pattern;
 
+  /**
+   * Add your docs here.
+   */
   public SetLEDPattern(LED subsystem, LEDPatterns pattern) {
     m_led = subsystem;
     m_pattern = pattern;
