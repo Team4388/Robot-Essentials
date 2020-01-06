@@ -1,5 +1,8 @@
 package frc4388.utility.controller;
 
+/**
+ * Add your docs here.
+ */
 public interface IHandController {
 
 	public double getLeftXAxis();
