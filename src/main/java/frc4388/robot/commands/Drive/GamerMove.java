@@ -8,13 +8,12 @@
 package frc4388.robot.commands.Drive;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc4388.robot.Robot;
+import frc4388.robot.RobotContainer;
 
 public class GamerMove extends Command {
   public GamerMove() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.m_Drive);
   }
 
   // Called just before this Command runs the first time
@@ -25,7 +24,7 @@ public class GamerMove extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_Drive.driveWithInput(0, 1);
+    RobotContainer.m_robotDrive.driveWithInput(0, 1);
   }
 
   // Make this return true when this Command no longer needs to run execute()

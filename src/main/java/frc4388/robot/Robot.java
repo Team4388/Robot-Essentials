@@ -10,12 +10,6 @@ package frc4388.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc4388.robot.commands.ExampleCommand;
-import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.ExampleSubsystem;
-import frc4388.robot.subsystems.LED;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,13 +19,8 @@ import frc4388.robot.subsystems.LED;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
-  public static LED m_led = new LED();
-  public static Drive m_Drive = new Drive();
-  public static OI m_oi;
-
   Command m_autonomousCommand;
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  public static RobotContainer m_robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -39,10 +28,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
-    // chooser.addOption("My Auto", new MyAutoCommand());
-    SmartDashboard.putData("Auto mode", m_chooser);
+    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
   }
 
   /**
@@ -84,7 +72,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_chooser.getSelected();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
