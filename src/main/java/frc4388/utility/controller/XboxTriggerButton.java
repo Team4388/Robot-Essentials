@@ -1,8 +1,7 @@
 package frc4388.utility.controller;
 
+import edu.wpi.first.wpilibj2.command.button.Button;
 import frc4388.utility.controller.XboxController;
-
-import edu.wpi.first.wpilibj.buttons.Button;
 
 /**
  * Mapping for the Xbox controller triggers to allow triggers to be defined as
