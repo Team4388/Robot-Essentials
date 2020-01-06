@@ -27,6 +27,7 @@ public class LED extends SubsystemBase {
     LEDController = new Spark(LEDConstants.LED_SPARK_ID);
     setPattern(LEDPatterns.FOREST_WAVES);
     LEDController.set(currentLED);
+    System.err.println("In the Beginning, there was Joe.\nAnd he said, 'Let there be LEDs.'\nAnd it was good.");
   }
 
   public void updateLED(){
