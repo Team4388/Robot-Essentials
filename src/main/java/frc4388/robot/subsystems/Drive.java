@@ -30,6 +30,9 @@ public class Drive extends SubsystemBase {
 
   public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
+  /**
+   * Add your docs here.
+   */
   public Drive(){
     /* factory default values */
     m_leftFrontMotor.configFactoryDefault();
@@ -54,6 +57,9 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
   }
 
+  /**
+   * Add your docs here.
+   */
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
   }

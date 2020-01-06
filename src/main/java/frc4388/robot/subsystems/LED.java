@@ -23,6 +23,9 @@ public class LED extends SubsystemBase {
   public static float currentLED;
   public static Spark LEDController;
 
+  /**
+   * Add your docs here.
+   */
   public LED(){
     LEDController = new Spark(LEDConstants.LED_SPARK_ID);
     setPattern(LEDPatterns.FOREST_WAVES);
@@ -30,10 +33,16 @@ public class LED extends SubsystemBase {
     System.err.println("In the Beginning, there was Joe.\nAnd he said, 'Let there be LEDs.'\nAnd it was good.");
   }
 
+  /**
+   * Add your docs here.
+   */
   public void updateLED(){
     LEDController.set(currentLED);
   }
 
+  /**
+   * Add your docs here.
+   */
   public void setPattern(LEDPatterns pattern){
     currentLED = pattern.getValue();
     LEDController.set(currentLED);

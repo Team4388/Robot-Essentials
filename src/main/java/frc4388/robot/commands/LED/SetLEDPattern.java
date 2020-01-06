@@ -20,6 +20,9 @@ public class SetLEDPattern extends InstantCommand {
   private final LED m_led;
   public static LEDPatterns m_pattern;
 
+  /**
+   * Add your docs here.
+   */
   public SetLEDPattern(LED subsystem, LEDPatterns pattern) {
     m_led = subsystem;
     m_pattern = pattern;
