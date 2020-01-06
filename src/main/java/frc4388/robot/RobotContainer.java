@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
-import frc4388.robot.commands.LED.UpdateLED;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.LED;
+import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
@@ -47,7 +47,7 @@ public class RobotContainer {
             getDriverController().getLeftYAxis(),
             getDriverController().getRightXAxis())));
         // continually sends updates to the Blinkin LED controller to keep the lights on
-        m_robotLED.setDefaultCommand(new UpdateLED(m_robotLED));
+        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED()));
     }
 
     /**
@@ -58,11 +58,15 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        //Test command to spin the robot while pressing A on the driver controller
+        // test command to spin the robot while pressing A on the driver controller
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
             .whileHeld(() -> m_robotDrive.driveWithInput(0, 1));
 
         /* Operator Buttons */
+        // activates "Lit Mode"
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
+            .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
     }
 
     /**
