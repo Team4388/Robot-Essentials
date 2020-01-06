@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.Drive.DriveWithJoystick;
-import frc4388.robot.commands.Drive.GamerMove;
 import frc4388.robot.commands.LED.UpdateLED;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.LED;
@@ -55,7 +54,7 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new GamerMove(m_robotDrive))
+            .whenPressed(() -> m_robotDrive.driveWithInput(0, 1))
             .whenReleased(new DriveWithJoystick(m_robotDrive, getDriverController()));
     }
 
