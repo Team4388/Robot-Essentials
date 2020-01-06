@@ -52,10 +52,16 @@ public class XboxController implements IHandController
 
 	private Joystick m_stick;
 
+	/**
+     * Add your docs here.
+     */
 	public XboxController(int portNumber){
 		m_stick = new Joystick(portNumber);
 	}
 
+	/**
+     * Add your docs here.
+     */
 	public Joystick getJoyStick() {
 		return m_stick;
 	}
