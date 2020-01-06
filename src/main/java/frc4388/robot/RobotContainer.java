@@ -43,6 +43,8 @@ public class RobotContainer {
 
         /* Default Commands */
         m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
+        // drives the robot with a two-axis input from the driver controller
+        // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new UpdateLED(m_robotLED));
     }
 
@@ -53,9 +55,13 @@ public class RobotContainer {
     * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
     */
     private void configureButtonBindings() {
+        /* Driver Buttons */
+        //Test command to spin the robot while pressing A on the driver controller
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
             .whenPressed(() -> m_robotDrive.driveWithInput(0, 1))
             .whenReleased(new DriveWithJoystick(m_robotDrive, getDriverController()));
+
+        /* Operator Buttons */
     }
 
     /**
