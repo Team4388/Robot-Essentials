@@ -8,9 +8,13 @@
 package frc4388.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.Drive.DriveWithJoystick;
+import frc4388.robot.commands.Drive.GamerMove;
+import frc4388.robot.commands.LED.UpdateLED;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.LED;
 import frc4388.utility.controller.IHandController;
@@ -25,18 +29,34 @@ import frc4388.utility.controller.XboxController;
  */
 public class RobotContainer {
     /* Subsystems */
-    public static final Drive m_robotDrive = new Drive();
-    public static final LED m_robotLED = new LED();
+    private final Drive m_robotDrive = new Drive();
+    private final LED m_robotLED = new LED();
 
     /* Controllers */
-    XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
-    XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+    private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
+    private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        
+        configureButtonBindings();
+
+        /* Default Commands */
+        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
+        m_robotLED.setDefaultCommand(new UpdateLED(m_robotLED));
+    }
+
+    /**
+    * Use this method to define your button->command mappings.  Buttons can be created by
+    * instantiating a {@link GenericHID} or one of its subclasses ({@link
+    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
+    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+    */
+    private void configureButtonBindings() {
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whenPressed(new GamerMove(m_robotDrive))
+            .whenReleased(new DriveWithJoystick(m_robotDrive, getDriverController()));
     }
 
     /**
@@ -49,6 +69,7 @@ public class RobotContainer {
         return new InstantCommand();
     }
 
+    
     public IHandController getDriverController() {
         return m_driverXbox;
     }

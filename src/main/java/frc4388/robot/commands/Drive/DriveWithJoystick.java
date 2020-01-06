@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,46 +7,46 @@
 
 package frc4388.robot.commands.Drive;
 
-import edu.wpi.first.wpilibj.command.Command;
-import frc4388.robot.Robot;
-import frc4388.robot.RobotContainer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.subsystems.Drive;
+import frc4388.utility.controller.IHandController;
 
-public class DriveWithJoystick extends Command {
+public class DriveWithJoystick extends CommandBase {
 
+  private final Drive m_drive;
+  private final IHandController m_driverXbox;
   public double m_inputMove, m_inputSteer;
 
-  public DriveWithJoystick() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+  /**
+   * Creates a new DriveWithJoystick, driving the robot with the given controller
+   */
+  public DriveWithJoystick(Drive subsystem, IHandController controller) {
+    m_drive = subsystem;
+    m_driverXbox = controller;
+    addRequirements(m_drive);
   }
 
-  // Called just before this Command runs the first time
+  // Called when the command is initially scheduled.
   @Override
-  protected void initialize() {
+  public void initialize() {
   }
 
-  // Called repeatedly when this Command is scheduled to run
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  protected void execute() {
-    m_inputMove = Robot.m_robotContainer.getDriverController().getLeftYAxis();
-    m_inputSteer = -(Robot.m_robotContainer.getDriverController().getRightXAxis());
-    RobotContainer.m_robotDrive.driveWithInput(m_inputMove, m_inputSteer);
+  public void execute() {
+    m_inputMove = m_driverXbox.getLeftYAxis();
+    m_inputSteer = m_driverXbox.getRightXAxis();
+    m_drive.driveWithInput(m_inputMove, m_inputSteer);
   }
 
-  // Make this return true when this Command no longer needs to run execute()
+  // Called once the command ends or is interrupted.
   @Override
-  protected boolean isFinished() {
+  public void end(boolean interrupted) {
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
     return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
   }
 }
