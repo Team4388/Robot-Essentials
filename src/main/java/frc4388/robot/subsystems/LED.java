@@ -7,12 +7,13 @@
 
 package frc4388.robot.subsystems;
 
-import frc4388.robot.RobotMap;
-import frc4388.robot.commands.LED.UpdateLED;
-import frc4388.robot.constants.LEDPatterns;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import frc4388.robot.Constants.LEDConstants;
+import frc4388.robot.commands.LED.UpdateLED;
+import frc4388.robot.constants.LEDPatterns;
 
 /**
  * Allows for the control of a 5v LED Strip using a Rev Robotics Blinkin LED Driver
@@ -23,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
   public static Spark LEDController;
 
   public LED(){
-    LEDController = new Spark(RobotMap.LED_SPARK_ID);
+    LEDController = new Spark(LEDConstants.LED_SPARK_ID);
     setPattern(LEDPatterns.FOREST_WAVES);
     LEDController.set(currentLED);
   }

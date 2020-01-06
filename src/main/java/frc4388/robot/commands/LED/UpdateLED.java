@@ -8,12 +8,11 @@
 package frc4388.robot.commands.LED;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc4388.robot.Robot;
+import frc4388.robot.RobotContainer;
 
 public class UpdateLED extends Command {
   public UpdateLED() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.m_led);
   }
 
   // Called just before this Command runs the first time
@@ -24,7 +23,7 @@ public class UpdateLED extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_led.updateLED();
+    RobotContainer.m_robotLED.updateLED();
   }
 
   // Make this return true when this Command no longer needs to run execute()

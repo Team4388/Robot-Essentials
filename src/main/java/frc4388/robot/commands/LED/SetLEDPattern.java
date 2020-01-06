@@ -7,7 +7,7 @@
 
 package frc4388.robot.commands.LED;
 
-import frc4388.robot.Robot;
+import frc4388.robot.RobotContainer;
 import frc4388.robot.constants.LEDPatterns;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -17,7 +17,6 @@ public class SetLEDPattern extends Command {
   public static LEDPatterns m_pattern;
 
   public SetLEDPattern(LEDPatterns pattern) {
-    requires(Robot.m_led);
     m_pattern = pattern;
   }
 
@@ -29,7 +28,7 @@ public class SetLEDPattern extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_led.setPattern(m_pattern);
+    RobotContainer.m_robotLED.setPattern(m_pattern);
   }
 
   // Make this return true when this Command no longer needs to run execute()

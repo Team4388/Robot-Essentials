@@ -12,7 +12,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc4388.robot.RobotMap;
+
+import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.commands.Drive.DriveWithJoystick;
 
 /**
@@ -22,10 +23,10 @@ public class Drive extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public static WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(RobotMap.DRIVE_LEFT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(RobotMap.DRIVE_RIGHT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(RobotMap.DRIVE_LEFT_BACK_CAN_ID);
-  public static WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(RobotMap.DRIVE_RIGHT_BACK_CAN_ID);
+  public static WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+  public static WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+  public static WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+  public static WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
 
   public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 

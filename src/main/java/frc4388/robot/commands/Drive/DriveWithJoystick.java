@@ -8,8 +8,8 @@
 package frc4388.robot.commands.Drive;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc4388.robot.OI;
 import frc4388.robot.Robot;
+import frc4388.robot.RobotContainer;
 
 public class DriveWithJoystick extends Command {
 
@@ -18,7 +18,6 @@ public class DriveWithJoystick extends Command {
   public DriveWithJoystick() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.m_Drive);
   }
 
   // Called just before this Command runs the first time
@@ -29,9 +28,9 @@ public class DriveWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    m_inputMove = OI.getInstance().getDriverController().getLeftYAxis();
-    m_inputSteer = -(OI.getInstance().getDriverController().getRightXAxis());
-    Robot.m_Drive.driveWithInput(m_inputMove, m_inputSteer);
+    m_inputMove = Robot.m_robotContainer.getDriverController().getLeftYAxis();
+    m_inputSteer = -(Robot.m_robotContainer.getDriverController().getRightXAxis());
+    RobotContainer.m_robotDrive.driveWithInput(m_inputMove, m_inputSteer);
   }
 
   // Make this return true when this Command no longer needs to run execute()
