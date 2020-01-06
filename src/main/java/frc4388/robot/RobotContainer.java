@@ -68,21 +68,32 @@ public class RobotContainer {
         return new InstantCommand();
     }
 
-    
+    /**
+     * Add your docs here.
+     */
     public IHandController getDriverController() {
         return m_driverXbox;
     }
     
+    /**
+     * Add your docs here.
+     */
     public IHandController getOperatorController()
     {
         return m_operatorXbox;
     }
     
+    /**
+     * Add your docs here.
+     */
     public Joystick getOperatorJoystick()
     {
         return m_operatorXbox.getJoyStick();
     }
     
+    /**
+     * Add your docs here.
+     */
     public Joystick getDriverJoystick()
     {
         return m_driverXbox.getJoyStick();
