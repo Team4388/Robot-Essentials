@@ -45,9 +45,9 @@ public class RobotContainer {
         // drives the robot with a two-axis input from the driver controller
         m_robotDrive.setDefaultCommand(new RunCommand(() -> m_robotDrive.driveWithInput(
             getDriverController().getLeftYAxis(),
-            getDriverController().getRightXAxis())));
+            getDriverController().getRightXAxis()), m_robotDrive));
         // continually sends updates to the Blinkin LED controller to keep the lights on
-        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED()));
+        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
 
     /**
