@@ -15,10 +15,12 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.utility.RobotGyro;
+import frc4388.utility.RobotTime;
 
 /**
  * Add your docs here.
@@ -61,10 +63,26 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
   }
 
+  @Override
+  public void periodic() {
+    if (RobotTime.frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
+      updateSmartDashboard();
+    }
+  }
+
   /**
    * Add your docs here.
    */
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
+  }
+
+  private void updateSmartDashboard() {
+
+    // Examples of the functionality of RobotGyro
+    SmartDashboard.putBoolean("Is Gyro a Pigeon?", m_gyro.isGyroAPigeon);
+    SmartDashboard.putNumber("Turn Rate", m_gyro.getRate());
+    SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
+    SmartDashboard.putData(m_gyro);
   }
 }
