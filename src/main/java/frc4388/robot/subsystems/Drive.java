@@ -10,11 +10,15 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
+import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.utility.RobotGyro;
 
 /**
  * Add your docs here.
@@ -28,8 +32,7 @@ public class Drive extends SubsystemBase {
   public WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
-
-
+  public RobotGyro m_gyro = new RobotGyro(new PigeonIMU(DriveConstants.DRIVE_PIGEON_ID));
 
   /**
    * Add your docs here.
