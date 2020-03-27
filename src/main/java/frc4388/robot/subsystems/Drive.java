@@ -84,9 +84,9 @@ public class Drive extends SubsystemBase {
   private void updateSmartDashboard() {
 
     // Examples of the functionality of RobotGyro
-    SmartDashboard.putBoolean("Is Gyro a Pigeon?", m_gyro.m_isGyroAPigeon);
-    SmartDashboard.putNumber("Turn Rate", m_gyro.getRate());
-    SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
-    SmartDashboard.putData(m_gyro);
+    SmartDashboard.putBoolean("Is Gyro a Pigeon?", getRobotGyro().m_isGyroAPigeon);
+    SmartDashboard.putNumber("Turn Rate", getRobotGyro().getRate());
+    SmartDashboard.putNumber("Gyro Pitch", getRobotGyro().getPitch());
+    SmartDashboard.putData(getRobotGyro());
   }
 }
