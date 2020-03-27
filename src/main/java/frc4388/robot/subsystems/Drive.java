@@ -23,12 +23,13 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public static WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
-  public static WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+  public WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+  public WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+  public WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+  public WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
-  public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+
 
   /**
    * Add your docs here.
