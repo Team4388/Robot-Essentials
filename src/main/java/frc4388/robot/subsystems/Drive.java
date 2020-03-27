@@ -27,12 +27,12 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
-  public WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
-  public WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
-  public WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
-  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
-  public RobotGyro m_gyro = new RobotGyro(new PigeonIMU(DriveConstants.DRIVE_PIGEON_ID));
+  private WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+  private WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+  private WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+  private WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+  private DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  private RobotGyro m_gyro = new RobotGyro(new PigeonIMU(DriveConstants.DRIVE_PIGEON_ID));
 
   /**
    * Add your docs here.
@@ -75,6 +75,10 @@ public class Drive extends SubsystemBase {
    */
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
+  }
+
+  public RobotGyro getRobotGyro(){
+    return m_gyro;
   }
 
   private void updateSmartDashboard() {
