@@ -9,7 +9,6 @@ package frc4388.utility;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
-import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.GyroBase;
@@ -21,7 +20,10 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 public class RobotGyro extends GyroBase {
     private PigeonIMU m_pigeon;
     private AHRS m_navX;
-    public boolean isGyroAPigeon; //true if pigeon, false if navX
+    public boolean m_isGyroAPigeon; //true if pigeon, false if navX
+
+    private double m_lastPigeonAngle;
+    private double m_deltaPigeonAngle;
 
     /**
      * Creates a Gyro based on a pigeon
@@ -29,7 +31,7 @@ public class RobotGyro extends GyroBase {
      */
     public RobotGyro(PigeonIMU gyro) {
         m_pigeon = gyro;
-        isGyroAPigeon = true;
+        m_isGyroAPigeon = true;
     }
 
     /**
@@ -38,7 +40,17 @@ public class RobotGyro extends GyroBase {
      */
     public RobotGyro(AHRS gyro){
         m_navX = gyro;
-        isGyroAPigeon = false;
+        m_isGyroAPigeon = false;
+    }
+
+    /**
+     * Run in periodic if you are using a pigeon. Updates a delta angle so that it can calculate getRate(). Note
+     * that the getRate() method for a navX will likely be much more accurate than for a pigeon.
+     */
+    public void updatePigeonDeltas() {
+        double currentPigeonAngle = getAngle();
+        m_deltaPigeonAngle = currentPigeonAngle - m_lastPigeonAngle;
+        m_lastPigeonAngle = currentPigeonAngle;
     }
 
     /**
@@ -59,7 +71,7 @@ public class RobotGyro extends GyroBase {
      */
     @Override
     public void calibrate() {
-        if (isGyroAPigeon) {
+        if (m_isGyroAPigeon) {
             m_pigeon.enterCalibrationMode(CalibrationMode.Temperature);
         } else {
             m_navX.calibrate();
@@ -68,7 +80,7 @@ public class RobotGyro extends GyroBase {
 
     @Override
     public void reset() {
-        if (isGyroAPigeon) {
+        if (m_isGyroAPigeon) {
             m_pigeon.setYaw(0);
         } else {
             m_navX.reset();
@@ -83,7 +95,7 @@ public class RobotGyro extends GyroBase {
 	 *					Pitch is within [-90,+90] degrees.
 	 *					Roll is within [-90,+90] degrees.
      */
-    public double[] getPigeonAngles() {
+    private double[] getPigeonAngles() {
         double[] angles = new double[3];
         m_pigeon.getYawPitchRoll(angles);
         return angles;
@@ -91,7 +103,7 @@ public class RobotGyro extends GyroBase {
 
     @Override
     public double getAngle() {
-        if (isGyroAPigeon) {
+        if (m_isGyroAPigeon) {
             return getPigeonAngles()[0];
         } else {
             return m_navX.getAngle();
@@ -113,7 +125,7 @@ public class RobotGyro extends GyroBase {
      * @return The current pitch value in degrees (-90 to 90).
      */
     public double getPitch() {
-        if (isGyroAPigeon) {
+        if (m_isGyroAPigeon) {
             return MathUtil.clamp(getPigeonAngles()[1], -90, 90);
         } else {
             return MathUtil.clamp(m_navX.getPitch(), -90, 90);
@@ -127,7 +139,7 @@ public class RobotGyro extends GyroBase {
      * @return The current roll value in degrees (-90 to 90).
      */
     public double getRoll() {
-        if (isGyroAPigeon) {
+        if (m_isGyroAPigeon) {
             return MathUtil.clamp(getPigeonAngles()[2], -90, 90);
         } else {
             return MathUtil.clamp(m_navX.getRoll(), -90, 90);
@@ -136,8 +148,8 @@ public class RobotGyro extends GyroBase {
 
     @Override
     public double getRate() {
-        if (isGyroAPigeon) {
-            return 0;
+        if (m_isGyroAPigeon) {
+            return m_deltaPigeonAngle / (RobotTime.m_deltaTime * 1000);
         } else {
             return m_navX.getRate();
         }

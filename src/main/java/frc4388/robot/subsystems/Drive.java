@@ -11,9 +11,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -65,7 +63,9 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (RobotTime.frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
+    m_gyro.updatePigeonDeltas();
+
+    if (RobotTime.m_frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
       updateSmartDashboard();
     }
   }
@@ -80,7 +80,7 @@ public class Drive extends SubsystemBase {
   private void updateSmartDashboard() {
 
     // Examples of the functionality of RobotGyro
-    SmartDashboard.putBoolean("Is Gyro a Pigeon?", m_gyro.isGyroAPigeon);
+    SmartDashboard.putBoolean("Is Gyro a Pigeon?", m_gyro.m_isGyroAPigeon);
     SmartDashboard.putNumber("Turn Rate", m_gyro.getRate());
     SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
     SmartDashboard.putData(m_gyro);

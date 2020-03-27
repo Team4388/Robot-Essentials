@@ -12,18 +12,18 @@ package frc4388.utility;
  * <p>All times are in milliseconds
  */
 public final class RobotTime {
-    private static long currTime = System.currentTimeMillis();
-    public static long deltaTime = 0;
+    private static long m_currTime = System.currentTimeMillis();
+    public static long m_deltaTime = 0;
 
-    private static long startRobotTime = currTime;
-    public static long robotTime = 0;
-    public static long lastRobotTime = 0;
+    private static long m_startRobotTime = m_currTime;
+    public static long m_robotTime = 0;
+    public static long m_lastRobotTime = 0;
 
-    private static long startMatchTime = 0;
-    public static long matchTime = 0;
-    public static long lastMatchTime = 0;
+    private static long m_startMatchTime = 0;
+    public static long m_matchTime = 0;
+    public static long m_lastMatchTime = 0;
 
-    public static long frameNumber = 0;
+    public static long m_frameNumber = 0;
 
     /**
      * This class should not be instantiated.
@@ -34,16 +34,16 @@ public final class RobotTime {
      * Call this once per periodic loop.
      */
     public static void updateTimes() {
-        lastRobotTime = robotTime;
-        lastMatchTime = matchTime;
+        m_lastRobotTime = m_robotTime;
+        m_lastMatchTime = m_matchTime;
 
-        currTime = System.currentTimeMillis();
-        robotTime = currTime - startRobotTime;
-        deltaTime = robotTime - lastRobotTime;
-        frameNumber++;
+        m_currTime = System.currentTimeMillis();
+        m_robotTime = m_currTime - m_startRobotTime;
+        m_deltaTime = m_robotTime - m_lastRobotTime;
+        m_frameNumber++;
 
-        if (matchTime != 0) {
-            matchTime = currTime - startMatchTime;
+        if (m_matchTime != 0) {
+            m_matchTime = m_currTime - m_startMatchTime;
         }
     }
 
@@ -51,9 +51,9 @@ public final class RobotTime {
      * Call this in both the auto and periodic inits
      */
     public static void startMatchTime() {
-        if (matchTime == 0) {
-            startMatchTime = currTime;
-            matchTime = 1;
+        if (m_matchTime == 0) {
+            m_startMatchTime = m_currTime;
+            m_matchTime = 1;
         }
     }
 
@@ -61,7 +61,7 @@ public final class RobotTime {
      * Call this in disabled init
      */
     public static void endMatchTime() {
-        startMatchTime = 0;
-        matchTime = 0;
+        m_startMatchTime = 0;
+        m_matchTime = 0;
     }
 }
