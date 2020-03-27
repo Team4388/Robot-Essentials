@@ -25,6 +25,8 @@ public final class Constants {
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         
         public static final int DRIVE_PIGEON_ID = 6;
+
+        public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
     }
 
     public static final class LEDConstants {
