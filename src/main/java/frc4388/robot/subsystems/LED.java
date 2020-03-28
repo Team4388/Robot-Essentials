@@ -20,8 +20,8 @@ import frc4388.utility.LEDPatterns;
  */
 public class LED extends SubsystemBase {
 
-  public static float currentLED;
-  public static Spark LEDController;
+  private float currentLED;
+  private Spark LEDController;
 
   /**
    * Add your docs here.
