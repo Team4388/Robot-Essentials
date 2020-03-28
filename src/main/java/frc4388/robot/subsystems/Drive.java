@@ -10,11 +10,15 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.utility.RobotGyro;
+import frc4388.utility.RobotTime;
 
 /**
  * Add your docs here.
@@ -23,12 +27,12 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public static WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
-  public static WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
-
-  public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  private WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+  private WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+  private WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+  private WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+  private DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  private RobotGyro m_gyro = new RobotGyro(new PigeonIMU(DriveConstants.DRIVE_PIGEON_ID));
 
   /**
    * Add your docs here.
@@ -57,10 +61,32 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
   }
 
+  @Override
+  public void periodic() {
+    m_gyro.updatePigeonDeltas();
+
+    if (RobotTime.m_frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
+      updateSmartDashboard();
+    }
+  }
+
   /**
    * Add your docs here.
    */
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
+  }
+
+  public RobotGyro getRobotGyro(){
+    return m_gyro;
+  }
+
+  private void updateSmartDashboard() {
+
+    // Examples of the functionality of RobotGyro
+    SmartDashboard.putBoolean("Is Gyro a Pigeon?", getRobotGyro().m_isGyroAPigeon);
+    SmartDashboard.putNumber("Turn Rate", getRobotGyro().getRate());
+    SmartDashboard.putNumber("Gyro Pitch", getRobotGyro().getPitch());
+    SmartDashboard.putData(getRobotGyro());
   }
 }
