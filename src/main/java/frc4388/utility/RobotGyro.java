@@ -18,6 +18,8 @@ import edu.wpi.first.wpiutil.math.MathUtil;
  * Gyro class that allows for interchangeable use between a pigeon and a navX
  */
 public class RobotGyro extends GyroBase {
+    private RobotTime m_robotTime = RobotTime.getInstance();
+
     private PigeonIMU m_pigeon;
     private AHRS m_navX;
     public boolean m_isGyroAPigeon; //true if pigeon, false if navX
@@ -149,7 +151,7 @@ public class RobotGyro extends GyroBase {
     @Override
     public double getRate() {
         if (m_isGyroAPigeon) {
-            return m_deltaPigeonAngle / (RobotTime.m_deltaTime * 1000);
+            return m_deltaPigeonAngle / (m_robotTime.m_deltaTime * 1000);
         } else {
             return m_navX.getRate();
         }

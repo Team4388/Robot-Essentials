@@ -21,7 +21,8 @@ import frc4388.utility.RobotTime;
  */
 public class Robot extends TimedRobot {
   Command m_autonomousCommand;
-
+  
+  private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
 
   /**
@@ -45,7 +46,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    RobotTime.updateTimes();
+    m_robotTime.updateTimes();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -60,7 +61,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    RobotTime.endMatchTime();
+    m_robotTime.endMatchTime();
   }
 
   @Override
@@ -85,7 +86,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    RobotTime.startMatchTime();
+    m_robotTime.startMatchTime();
   }
 
   /**
@@ -104,7 +105,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    RobotTime.startMatchTime();
+    m_robotTime.startMatchTime();
   }
 
   /**
