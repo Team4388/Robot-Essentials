@@ -117,7 +117,15 @@ public class RobotGyro extends GyroBase {
      * @return heading from -180 to 180 degrees
      */
     public double getHeading() {
-        return Math.IEEEremainder(getAngle(), 360);
+        return getHeading(getAngle());
+    }
+
+    /**
+     * Gets an absolute heading of the robot
+     * @return heading from -180 to 180 degrees
+     */
+    public double getHeading(double angle) {
+        return Math.IEEEremainder(angle, 360);
     }
 
     /**
