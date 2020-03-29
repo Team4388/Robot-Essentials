@@ -24,6 +24,8 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  private RobotTime m_robotTime = RobotTime.getInstance();
+
   private WPI_TalonSRX m_leftFrontMotor;
   private WPI_TalonSRX m_rightFrontMotor;
   private WPI_TalonSRX m_leftBackMotor;
@@ -49,7 +51,7 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     m_gyro.updatePigeonDeltas();
 
-    if (RobotTime.m_frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
+    if (m_robotTime.m_frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
       updateSmartDashboard();
     }
   }

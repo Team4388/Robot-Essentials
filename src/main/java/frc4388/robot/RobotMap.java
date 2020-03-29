@@ -25,15 +25,14 @@ import frc4388.utility.RobotGyro;
 public class RobotMap {
 
     public RobotMap() {
-        configureLEDSubsystem();
-        configureDriveSubsystem();
+        configureLEDMotorControllers();
+        configureDriveMotorControllers();
     }
 
     /* LED Subsystem */
     public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
 
-    void configureLEDSubsystem() {
-        
+    void configureLEDMotorControllers() {
     }
 
     /* Drive Subsystem */
@@ -44,7 +43,7 @@ public class RobotMap {
     public final DifferentialDrive driveTrain = new DifferentialDrive(leftFrontMotor, rightFrontMotor);
     public final RobotGyro gyroDrive = new RobotGyro(new PigeonIMU(DriveConstants.DRIVE_PIGEON_ID));
 
-    void configureDriveSubsystem() {
+    void configureDriveMotorControllers() {
 
         /* factory default values */
         leftFrontMotor.configFactoryDefault();
