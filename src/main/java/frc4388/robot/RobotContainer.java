@@ -27,46 +27,51 @@ import frc4388.utility.controller.XboxController;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    /* RobotMap */
+    private final RobotMap m_robotMap = new RobotMap();
+
     /* Subsystems */
-    private final Drive m_robotDrive = new Drive();
-    private final LED m_robotLED = new LED();
+    private final Drive m_robotDrive = new Drive(m_robotMap.leftFrontMotor, m_robotMap.rightFrontMotor,
+            m_robotMap.leftBackMotor, m_robotMap.rightBackMotor, m_robotMap.gyroDrive);
+
+    private final LED m_robotLED = new LED(m_robotMap.LEDController);
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
     /**
-     * The container for the robot.  Contains subsystems, OI devices, and commands.
+     * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         configureButtonBindings();
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        m_robotDrive.setDefaultCommand(new RunCommand(() -> m_robotDrive.driveWithInput(
-            getDriverController().getLeftYAxis(),
-            getDriverController().getRightXAxis()), m_robotDrive));
+        m_robotDrive.setDefaultCommand(
+                new RunCommand(() -> m_robotDrive.driveWithInput(getDriverController().getLeftYAxis(),
+                        getDriverController().getRightXAxis()), m_robotDrive));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
 
     /**
-    * Use this method to define your button->command mappings.  Buttons can be created by
-    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
-    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-    */
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by instantiating a {@link GenericHID} or one of its subclasses
+     * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+     * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
     private void configureButtonBindings() {
         /* Driver Buttons */
         // test command to spin the robot while pressing A on the driver controller
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(() -> m_robotDrive.driveWithInput(0, 1));
+                .whileHeld(() -> m_robotDrive.driveWithInput(0, 1));
 
         /* Operator Buttons */
         // activates "Lit Mode"
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-            .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+                .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
+                .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
     }
 
     /**
@@ -85,28 +90,25 @@ public class RobotContainer {
     public IHandController getDriverController() {
         return m_driverXbox;
     }
-    
+
     /**
      * Add your docs here.
      */
-    public IHandController getOperatorController()
-    {
+    public IHandController getOperatorController() {
         return m_operatorXbox;
     }
-    
+
     /**
      * Add your docs here.
      */
-    public Joystick getOperatorJoystick()
-    {
+    public Joystick getOperatorJoystick() {
         return m_operatorXbox.getJoyStick();
     }
-    
+
     /**
      * Add your docs here.
      */
-    public Joystick getDriverJoystick()
-    {
+    public Joystick getDriverJoystick() {
         return m_driverXbox.getJoyStick();
     }
 }
