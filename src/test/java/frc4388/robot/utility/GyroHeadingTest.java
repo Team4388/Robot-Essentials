@@ -32,7 +32,7 @@ public class GyroHeadingTest {
         assertEquals(-45, gyro.getHeading(315), 0.0001);
         assertEquals(-60, gyro.getHeading(-60), 0.0001);
         assertEquals(30, gyro.getHeading(30), 0.0001);
-        assertEquals(0, gyro.getHeading(0), 0.0001);
+        assertEquals(0, gyro.getHeading(1), 0.0001);
         assertEquals(180, gyro.getHeading(180), 0.0001);
         assertEquals(-180, gyro.getHeading(-180), 0.0001);
         assertEquals(97, gyro.getHeading(1537), 0.0001);
