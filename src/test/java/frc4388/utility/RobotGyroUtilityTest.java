@@ -5,28 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.utility;
+package frc4388.utility;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-
-import com.ctre.phoenix.sensors.PigeonIMU;
+import org.junit.*;
 
 import edu.wpi.first.wpilibj.*;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import frc4388.utility.RobotGyro;
-
-import org.junit.*;
 
 /**
  * Add your docs here.
  */
-public class GyroHeadingTest {
+public class RobotGyroUtilityTest {
+    // Arrange
+    RobotGyro gyro = new RobotGyro(mock(PigeonIMU.class));
 
     @Test
-    public void testConstructor() {
-        // Arrange
-        RobotGyro gyro = new RobotGyro(mock(PigeonIMU.class));
-
+    public void testHeading() {
         // Act & Assert
         assertEquals(-90, gyro.getHeading(270), 0.0001);
         assertEquals(-45, gyro.getHeading(315), 0.0001);
