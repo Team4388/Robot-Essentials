@@ -37,13 +37,13 @@ public class Drive extends SubsystemBase {
    * Add your docs here.
    */
   public Drive(WPI_TalonSRX leftFrontMotor, WPI_TalonSRX rightFrontMotor, WPI_TalonSRX leftBackMotor,
-      WPI_TalonSRX rightBackMotor, RobotGyro gyro) {
+      WPI_TalonSRX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
 
     m_leftFrontMotor = leftFrontMotor;
     m_rightFrontMotor = rightFrontMotor;
     m_leftBackMotor = leftBackMotor;
     m_rightBackMotor = rightBackMotor;
-    m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+    m_driveTrain = driveTrain;
     m_gyro = gyro;
   }
 
@@ -61,6 +61,14 @@ public class Drive extends SubsystemBase {
    */
   public void driveWithInput(double move, double steer) {
     m_driveTrain.arcadeDrive(move, steer);
+  }
+
+  /**
+   * Add your docs here.
+   */
+  public void tankDriveWithInput(double leftMove, double rightMove) {
+    m_leftFrontMotor.set(leftMove);
+    m_rightFrontMotor.set(rightMove);
   }
 
   /**
