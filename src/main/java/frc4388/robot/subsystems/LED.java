@@ -21,6 +21,7 @@ import frc4388.utility.LEDPatterns;
 public class LED extends SubsystemBase {
 
   private float m_currentLED;
+  private LEDPatterns m_currentPattern;
   private Spark m_LEDController;
 
   /**
@@ -29,27 +30,35 @@ public class LED extends SubsystemBase {
   public LED(Spark LEDController){
     m_LEDController = LEDController;
     setPattern(LEDConstants.DEFAULT_PATTERN);
-    m_LEDController.set(m_currentLED);
+    updateLED();
     System.err.println("In the Beginning, there was Joe.\nAnd he said, 'Let there be LEDs.'\nAnd it was good.");
   }
 
   @Override
   public void periodic(){
-    SmartDashboard.putNumber("LED", m_currentLED);
+    SmartDashboard.putNumber("LED", m_currentPattern.getValue());
   }
 
   /**
    * Add your docs here.
    */
   public void updateLED(){
-    m_LEDController.set(m_currentLED);
+    m_LEDController.set(m_currentPattern.getValue());
   }
 
   /**
    * Add your docs here.
    */
   public void setPattern(LEDPatterns pattern){
-    m_currentLED = pattern.getValue();
-    m_LEDController.set(m_currentLED);
+    m_currentPattern = pattern;
+    m_LEDController.set(m_currentPattern.getValue());
+  }
+
+  /**
+   * Add your docs here.
+   * @return
+   */
+  public LEDPatterns getPattern() {
+    return m_currentPattern;
   }
 }
