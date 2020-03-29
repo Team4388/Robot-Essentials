@@ -20,8 +20,8 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 public class RobotGyro extends GyroBase {
     private RobotTime m_robotTime = RobotTime.getInstance();
 
-    private PigeonIMU m_pigeon;
-    private AHRS m_navX;
+    private PigeonIMU m_pigeon = null;
+    private AHRS m_navX = null;
     public boolean m_isGyroAPigeon; //true if pigeon, false if navX
 
     private double m_lastPigeonAngle;

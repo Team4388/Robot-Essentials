@@ -31,12 +31,6 @@ public class LEDSubsystemTest {
         led.setPattern(LEDPatterns.BLUE_BREATH);
         assertEquals(LEDPatterns.BLUE_BREATH.getValue(), led.getPattern().getValue(), 0.0001);
 
-        led.setPattern(LEDPatterns.C1_SCANNER);
-        assertEquals(LEDPatterns.C1_SCANNER.getValue(), led.getPattern().getValue(), 0.0001);
-
-        led.setPattern(LEDPatterns.C1_CHASE);
-        assertEquals(LEDPatterns.C1_CHASE.getValue(), led.getPattern().getValue(), 0.0001);
-
         led.setPattern(LEDPatterns.SOLID_BLACK);
         assertEquals(LEDPatterns.SOLID_BLACK.getValue(), led.getPattern().getValue(), 0.0001);
     }
