@@ -55,7 +55,7 @@ public class RobotTime {
         m_deltaTime = m_robotTime - m_lastRobotTime;
         m_frameNumber++;
 
-        if (m_matchTime != 0) {
+        if (m_startMatchTime != 0) {
             m_matchTime = m_currTime - m_startMatchTime;
         }
     }
@@ -64,9 +64,8 @@ public class RobotTime {
      * Call this in both the auto and periodic inits
      */
     public void startMatchTime() {
-        if (m_matchTime == 0) {
+        if (m_startMatchTime == 0) {
             m_startMatchTime = m_currTime;
-            m_matchTime = 1;
         }
     }
 
