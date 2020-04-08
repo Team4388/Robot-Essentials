@@ -23,14 +23,18 @@ public class LEDSubsystemTest {
 
     @Test
     public void testPatterns() {
+        // TEST 1
         assertEquals(LEDConstants.DEFAULT_PATTERN.getValue(), led.getPattern().getValue(), 0.0001);
 
+        // TEST 2
         led.setPattern(LEDPatterns.RAINBOW_RAINBOW);
         assertEquals(LEDPatterns.RAINBOW_RAINBOW.getValue(), led.getPattern().getValue(), 0.0001);
 
+        // TEST 3
         led.setPattern(LEDPatterns.BLUE_BREATH);
         assertEquals(LEDPatterns.BLUE_BREATH.getValue(), led.getPattern().getValue(), 0.0001);
 
+        // TEST 4
         led.setPattern(LEDPatterns.SOLID_BLACK);
         assertEquals(LEDPatterns.SOLID_BLACK.getValue(), led.getPattern().getValue(), 0.0001);
     }

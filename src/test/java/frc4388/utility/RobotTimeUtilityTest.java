@@ -21,29 +21,34 @@ public class RobotTimeUtilityTest {
 
     @Test
     public void testUpdateTimes() {
+        // SETUP
         long lastTime;
+        robotTime.m_deltaTime = 0;
+        robotTime.m_robotTime = 0;
+        robotTime.m_lastRobotTime = 0;
+        robotTime.m_frameNumber = 0;
+        robotTime.endMatchTime();
+        robotTime.m_lastMatchTime = 0;
 
-        // Initialisation
+        // TEST 1
         assertEquals(0, robotTime.m_deltaTime);
         assertEquals(0, robotTime.m_robotTime);
         assertEquals(0, robotTime.m_lastRobotTime);
         assertEquals(0, robotTime.m_frameNumber);
         lastTime = robotTime.m_robotTime;
 
+        // TEST 2
         wait(1);
         robotTime.updateTimes();
-
-        // First Frame
         assertEquals(true, robotTime.m_deltaTime > 0);
         assertEquals(true, robotTime.m_robotTime > 0);
         assertEquals(lastTime, robotTime.m_lastRobotTime);
         assertEquals(1, robotTime.m_frameNumber);
         lastTime = robotTime.m_robotTime;
 
+        // TEST 3
         wait(1);
         robotTime.updateTimes();
-
-        // Second Frame
         assertEquals(true, robotTime.m_deltaTime > 0);
         assertEquals(true, robotTime.m_robotTime > 0);
         assertEquals(lastTime, robotTime.m_lastRobotTime);
@@ -52,35 +57,33 @@ public class RobotTimeUtilityTest {
 
     @Test
     public void testMatchTime() {
+        // SETUP
         long lastTime;
 
-        // Second Frame
+        // TEST 1
         assertEquals(0, robotTime.m_matchTime);
         assertEquals(0, robotTime.m_lastMatchTime);
         lastTime = robotTime.m_matchTime;
 
+        // TEST 2
         robotTime.startMatchTime();
         wait(1);
         robotTime.updateTimes();
-
-        // Third Frame
         assertEquals(true, robotTime.m_matchTime > 0);
         assertEquals(lastTime, robotTime.m_lastMatchTime);
         lastTime = robotTime.m_matchTime;
         
+        // TEST 3
         wait(1);
         robotTime.updateTimes();
         robotTime.endMatchTime();
-
-        // Fourth Frame
         assertEquals(0, robotTime.m_matchTime);
         assertEquals(lastTime, robotTime.m_lastMatchTime);
         lastTime = robotTime.m_matchTime;
 
+        // TEST 4
         wait(1);
         robotTime.updateTimes();
-
-        // Fifth Frame
         assertEquals(0, robotTime.m_matchTime);
         assertEquals(lastTime, robotTime.m_lastMatchTime);
     }
