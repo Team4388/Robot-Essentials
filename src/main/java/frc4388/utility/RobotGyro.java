@@ -159,7 +159,7 @@ public class RobotGyro extends GyroBase {
     @Override
     public double getRate() {
         if (m_isGyroAPigeon) {
-            return m_deltaPigeonAngle / (m_robotTime.m_deltaTime * 1000);
+            return m_deltaPigeonAngle / m_robotTime.m_deltaTime * 1000;
         } else {
             return m_navX.getRate();
         }
