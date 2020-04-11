@@ -8,10 +8,8 @@
 package frc4388.utility;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import org.junit.*;
 
-import edu.wpi.first.wpilibj.*;
+import org.junit.*;
 
 /**
  * Add your docs here.
@@ -21,7 +19,7 @@ public class RobotTimeUtilityTest {
 
     @Test
     public void testUpdateTimes() {
-        // SETUP
+        // Arrange
         long lastTime;
         robotTime.m_deltaTime = 0;
         robotTime.m_robotTime = 0;
@@ -30,25 +28,29 @@ public class RobotTimeUtilityTest {
         robotTime.endMatchTime();
         robotTime.m_lastMatchTime = 0;
 
-        // TEST 1
+        // Assert
         assertEquals(0, robotTime.m_deltaTime);
         assertEquals(0, robotTime.m_robotTime);
         assertEquals(0, robotTime.m_lastRobotTime);
         assertEquals(0, robotTime.m_frameNumber);
         lastTime = robotTime.m_robotTime;
 
-        // TEST 2
+        // Act
         wait(1);
         robotTime.updateTimes();
+
+        // Assert
         assertEquals(true, robotTime.m_deltaTime > 0);
         assertEquals(true, robotTime.m_robotTime > 0);
         assertEquals(lastTime, robotTime.m_lastRobotTime);
         assertEquals(1, robotTime.m_frameNumber);
         lastTime = robotTime.m_robotTime;
 
-        // TEST 3
+        // Act
         wait(1);
         robotTime.updateTimes();
+
+        // Assert
         assertEquals(true, robotTime.m_deltaTime > 0);
         assertEquals(true, robotTime.m_robotTime > 0);
         assertEquals(lastTime, robotTime.m_lastRobotTime);
@@ -57,33 +59,39 @@ public class RobotTimeUtilityTest {
 
     @Test
     public void testMatchTime() {
-        // SETUP
+        // Arrange
         long lastTime;
 
-        // TEST 1
+        // Assert
         assertEquals(0, robotTime.m_matchTime);
         assertEquals(0, robotTime.m_lastMatchTime);
         lastTime = robotTime.m_matchTime;
 
-        // TEST 2
+        // Act
         robotTime.startMatchTime();
         wait(1);
         robotTime.updateTimes();
+
+        // Assert
         assertEquals(true, robotTime.m_matchTime > 0);
         assertEquals(lastTime, robotTime.m_lastMatchTime);
         lastTime = robotTime.m_matchTime;
         
-        // TEST 3
+        // Act
         wait(1);
         robotTime.updateTimes();
         robotTime.endMatchTime();
+
+        // Assert
         assertEquals(0, robotTime.m_matchTime);
         assertEquals(lastTime, robotTime.m_lastMatchTime);
         lastTime = robotTime.m_matchTime;
 
-        // TEST 4
+        // Act
         wait(1);
         robotTime.updateTimes();
+
+        // Assert
         assertEquals(0, robotTime.m_matchTime);
         assertEquals(lastTime, robotTime.m_lastMatchTime);
     }
