@@ -7,10 +7,7 @@
 
 package frc4388.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,45 +24,34 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
-  private WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
-  private WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
-  private WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
-  private DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
-  private RobotGyro m_gyro = new RobotGyro(new PigeonIMU(DriveConstants.DRIVE_PIGEON_ID));
+  private RobotTime m_robotTime = RobotTime.getInstance();
+
+  private WPI_TalonSRX m_leftFrontMotor;
+  private WPI_TalonSRX m_rightFrontMotor;
+  private WPI_TalonSRX m_leftBackMotor;
+  private WPI_TalonSRX m_rightBackMotor;
+  private DifferentialDrive m_driveTrain;
+  private RobotGyro m_gyro;
 
   /**
    * Add your docs here.
    */
-  public Drive(){
-    /* factory default values */
-    m_leftFrontMotor.configFactoryDefault();
-    m_rightFrontMotor.configFactoryDefault();
-    m_leftBackMotor.configFactoryDefault();
-    m_rightBackMotor.configFactoryDefault();
+  public Drive(WPI_TalonSRX leftFrontMotor, WPI_TalonSRX rightFrontMotor, WPI_TalonSRX leftBackMotor,
+      WPI_TalonSRX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
 
-    /* set back motors as followers */
-    m_leftBackMotor.follow(m_leftFrontMotor);
-    m_rightBackMotor.follow(m_rightFrontMotor);
-
-    /* set neutral mode */
-    m_leftFrontMotor.setNeutralMode(NeutralMode.Brake);
-    m_rightFrontMotor.setNeutralMode(NeutralMode.Brake);
-    m_leftFrontMotor.setNeutralMode(NeutralMode.Brake);
-    m_rightFrontMotor.setNeutralMode(NeutralMode.Brake);
-
-    /* flip input so forward becomes back, etc */
-    m_leftFrontMotor.setInverted(false);
-    m_rightFrontMotor.setInverted(false);
-    m_leftBackMotor.setInverted(InvertType.FollowMaster);
-    m_rightBackMotor.setInverted(InvertType.FollowMaster);
+    m_leftFrontMotor = leftFrontMotor;
+    m_rightFrontMotor = rightFrontMotor;
+    m_leftBackMotor = leftBackMotor;
+    m_rightBackMotor = rightBackMotor;
+    m_driveTrain = driveTrain;
+    m_gyro = gyro;
   }
 
   @Override
   public void periodic() {
     m_gyro.updatePigeonDeltas();
 
-    if (RobotTime.m_frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
+    if (m_robotTime.m_frameNumber % DriveConstants.SMARTDASHBOARD_UPDATE_FRAME == 0) {
       updateSmartDashboard();
     }
   }
@@ -73,20 +59,27 @@ public class Drive extends SubsystemBase {
   /**
    * Add your docs here.
    */
-  public void driveWithInput(double move, double steer){
+  public void driveWithInput(double move, double steer) {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
-  public RobotGyro getRobotGyro(){
-    return m_gyro;
+  /**
+   * Add your docs here.
+   */
+  public void tankDriveWithInput(double leftMove, double rightMove) {
+    m_leftFrontMotor.set(leftMove);
+    m_rightFrontMotor.set(rightMove);
   }
 
+  /**
+   * Add your docs here.
+   */
   private void updateSmartDashboard() {
 
     // Examples of the functionality of RobotGyro
-    SmartDashboard.putBoolean("Is Gyro a Pigeon?", getRobotGyro().m_isGyroAPigeon);
-    SmartDashboard.putNumber("Turn Rate", getRobotGyro().getRate());
-    SmartDashboard.putNumber("Gyro Pitch", getRobotGyro().getPitch());
-    SmartDashboard.putData(getRobotGyro());
+    SmartDashboard.putBoolean("Is Gyro a Pigeon?", m_gyro.m_isGyroAPigeon);
+    SmartDashboard.putNumber("Turn Rate", m_gyro.getRate());
+    SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
+    SmartDashboard.putData(m_gyro);
   }
 }
