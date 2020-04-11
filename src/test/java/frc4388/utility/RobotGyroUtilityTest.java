@@ -25,22 +25,21 @@ import frc4388.utility.RobotGyro;
 public class RobotGyroUtilityTest {
     // TODO UNTESTED: most functions for NavX
 
+    private RobotGyro gyroPigeon;
+    private RobotGyro gyroNavX;
+
     @Test
     public void testConstructor() {
         // Arrange
         MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
         AHRS navX = mock(AHRS.class);
+        gyroPigeon = new RobotGyro(pigeon);
+        gyroNavX = new RobotGyro(navX);
 
-        // Act
-        RobotGyro gyroPigeon = new RobotGyro(pigeon);
-        RobotGyro gyroNavX = new RobotGyro(navX);
-
-        // Assert 1
+        // Assert
         assertEquals(true, gyroPigeon.m_isGyroAPigeon);
         assertEquals(pigeon, gyroPigeon.getPigeon());
         assertEquals(null, gyroPigeon.getNavX());
-
-        // Assert 2
         assertEquals(false, gyroNavX.m_isGyroAPigeon);
         assertEquals(navX, gyroNavX.getNavX());
         assertEquals(null, gyroNavX.getPigeon());
@@ -50,7 +49,7 @@ public class RobotGyroUtilityTest {
     public void testHeadingPigeon() {
         // Arrange
         MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
-        RobotGyro gyroPigeon = new RobotGyro(pigeon);
+        gyroPigeon = new RobotGyro(pigeon);
 
         // Act & Assert
         assertEquals(-90, gyroPigeon.getHeading(270), 0.0001);
@@ -68,7 +67,7 @@ public class RobotGyroUtilityTest {
     public void testYawPitchRollPigeon() {
         // Arrange
         MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
-        RobotGyro gyroPigeon = new RobotGyro(pigeon);
+        gyroPigeon = new RobotGyro(pigeon);
 
         // Assert
         assertEquals(0, gyroPigeon.getAngle(), 0.0001);
@@ -140,7 +139,7 @@ public class RobotGyroUtilityTest {
     public void testRatesPigeon() {
         // Arrange
         MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
-        RobotGyro gyroPigeon = new RobotGyro(pigeon);
+        gyroPigeon = new RobotGyro(pigeon);
         RobotTime robotTime = RobotTime.getInstance();
         gyroPigeon.updatePigeonDeltas();
 
@@ -183,11 +182,5 @@ public class RobotGyroUtilityTest {
 
         // Assert
         assertEquals(120000, gyroPigeon.getRate(), 0.001);
-    }
-
-    private void wait(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception e) {}
     }
 }
