@@ -5,19 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.subsystems;
+package frc4388.utility;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import org.junit.*;
+
 import edu.wpi.first.wpilibj.*;
-import frc4388.robot.Constants.LEDConstants;
-import frc4388.utility.LEDPatterns;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Add your docs here.
  */
-public class LEDSubsystemTest {
+public class UtilityTest {
     @Test
     public void testConstructor() {
         // Arrange
