@@ -5,21 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.utility;
+package frc4388.robot.subsystems;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
 import org.junit.*;
 
-import edu.wpi.first.wpilibj.*;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import edu.wpi.first.wpilibj.Spark;
+import frc4388.robot.Constants.LEDConstants;
+import frc4388.utility.LEDPatterns;
 
 /**
- * Add your docs here.
+ * Based off the LEDSubsystemTest class
  */
-public class UtilityTest {
+public class SubsystemTest {
     @Test
     public void testConstructor() {
         // Arrange
@@ -55,11 +55,5 @@ public class UtilityTest {
 
         // Assert
         assertEquals(LEDPatterns.SOLID_BLACK.getValue(), led.getPattern().getValue(), 0.0001);
-    }
-
-    private void wait(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception e) {}
     }
 }

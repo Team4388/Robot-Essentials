@@ -9,39 +9,53 @@ package frc4388.utility;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import org.junit.*;
 
-import edu.wpi.first.wpilibj.*;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import frc4388.mocks.MockPigeonIMU;
+import frc4388.robot.Constants.DriveConstants;
 
 /**
- * Add your docs here.
+ * Based on the RobotGyroUtilityTest class
  */
 public class UtilityTest {
-    @Test
-    public void testExample() {
-        // Arrange
-        boolean isFalse = false;
-        int i = 0;
-        double d = 0.0;
+    private RobotGyro gyroPigeon;
+    private RobotGyro gyroNavX;
 
-        // Act
-        wait(1);
-        isFalse = !isFalse;
-        i++;
-        d -= Math.PI;
+    @Test
+    public void testConstructor() {
+        // Arrange
+        MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
+        AHRS navX = mock(AHRS.class);
+        gyroPigeon = new RobotGyro(pigeon);
+        gyroNavX = new RobotGyro(navX);
 
         // Assert
-        assertEquals(1, i);
-        assertEquals(-Math.PI, d, 0.001);
-        assertEquals(true, isFalse);
+        assertEquals(true, gyroPigeon.m_isGyroAPigeon);
+        assertEquals(pigeon, gyroPigeon.getPigeon());
+        assertEquals(null, gyroPigeon.getNavX());
+        assertEquals(false, gyroNavX.m_isGyroAPigeon);
+        assertEquals(navX, gyroNavX.getNavX());
+        assertEquals(null, gyroNavX.getPigeon());
     }
 
-    private void wait(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception e) {}
+    @Test
+    public void testHeadingPigeon() {
+        // Arrange
+        MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
+        gyroPigeon = new RobotGyro(pigeon);
+
+        // Act & Assert
+        assertEquals(-90, gyroPigeon.getHeading(270), 0.0001);
+        assertEquals(-45, gyroPigeon.getHeading(315), 0.0001);
+        assertEquals(-60, gyroPigeon.getHeading(-60), 0.0001);
+        assertEquals(30, gyroPigeon.getHeading(30), 0.0001);
+        assertEquals(0, gyroPigeon.getHeading(0), 0.0001);
+        assertEquals(180, gyroPigeon.getHeading(180), 0.0001);
+        assertEquals(-180, gyroPigeon.getHeading(-180), 0.0001);
+        assertEquals(97, gyroPigeon.getHeading(1537), 0.0001);
+        assertEquals(99, gyroPigeon.getHeading(-2781), 0.0001);
     }
 }

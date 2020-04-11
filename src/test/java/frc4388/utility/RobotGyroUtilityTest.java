@@ -9,15 +9,13 @@ package frc4388.utility;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import org.junit.*;
 
-import edu.wpi.first.wpilibj.*;
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
+
+import org.junit.*;
 
 import frc4388.mocks.MockPigeonIMU;
 import frc4388.robot.Constants.DriveConstants;
-import frc4388.utility.RobotGyro;
 
 /**
  * Add your docs here.

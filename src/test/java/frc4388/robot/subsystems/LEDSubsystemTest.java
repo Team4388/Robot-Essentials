@@ -7,9 +7,11 @@
 
 package frc4388.robot.subsystems;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+
+import org.junit.Test;
+
 import edu.wpi.first.wpilibj.*;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.utility.LEDPatterns;
@@ -53,11 +55,5 @@ public class LEDSubsystemTest {
 
         // Assert
         assertEquals(LEDPatterns.SOLID_BLACK.getValue(), led.getPattern().getValue(), 0.0001);
-    }
-
-    private void wait(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception e) {}
     }
 }
