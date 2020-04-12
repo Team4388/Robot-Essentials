@@ -7,7 +7,7 @@
 
 package frc4388.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,18 +26,18 @@ public class Drive extends SubsystemBase {
 
   private RobotTime m_robotTime = RobotTime.getInstance();
 
-  private WPI_TalonSRX m_leftFrontMotor;
-  private WPI_TalonSRX m_rightFrontMotor;
-  private WPI_TalonSRX m_leftBackMotor;
-  private WPI_TalonSRX m_rightBackMotor;
+  private WPI_TalonFX m_leftFrontMotor;
+  private WPI_TalonFX m_rightFrontMotor;
+  private WPI_TalonFX m_leftBackMotor;
+  private WPI_TalonFX m_rightBackMotor;
   private DifferentialDrive m_driveTrain;
   private RobotGyro m_gyro;
 
   /**
    * Add your docs here.
    */
-  public Drive(WPI_TalonSRX leftFrontMotor, WPI_TalonSRX rightFrontMotor, WPI_TalonSRX leftBackMotor,
-      WPI_TalonSRX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
+  public Drive(WPI_TalonFX leftFrontMotor, WPI_TalonFX rightFrontMotor, WPI_TalonFX leftBackMotor,
+      WPI_TalonFX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
 
     m_leftFrontMotor = leftFrontMotor;
     m_rightFrontMotor = rightFrontMotor;
