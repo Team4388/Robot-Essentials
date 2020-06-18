@@ -7,19 +7,19 @@
 
 package frc4388.robot.subsystems;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import org.junit.Test;
+import org.junit.*;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Spark;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.utility.LEDPatterns;
 
 /**
- * Add your docs here.
+ * Based off the LEDSubsystemTest class
  */
-public class LEDSubsystemTest {
+public class SubsystemTest {
     @Test
     public void testConstructor() {
         // Arrange
