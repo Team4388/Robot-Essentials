@@ -9,44 +9,47 @@ package frc4388.utility;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import org.junit.*;
 
-import edu.wpi.first.wpilibj.*;
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
+
+import org.junit.*;
 
 import frc4388.mocks.MockPigeonIMU;
 import frc4388.robot.Constants.DriveConstants;
-import frc4388.utility.RobotGyro;
 
 /**
  * Add your docs here.
  */
 public class RobotGyroUtilityTest {
-    MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
-    RobotGyro gyroPigeon = new RobotGyro(pigeon);
-    AHRS navX = mock(AHRS.class);
-    RobotGyro gyroNavX = new RobotGyro(navX);
-    RobotTime robotTime = RobotTime.getInstance();
-
     // TODO UNTESTED: most functions for NavX
 
+    private RobotGyro gyroPigeon;
+    private RobotGyro gyroNavX;
+
     @Test
-    public void testConfig() {
-        // TEST 1
+    public void testConstructor() {
+        // Arrange
+        MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
+        AHRS navX = mock(AHRS.class);
+        gyroPigeon = new RobotGyro(pigeon);
+        gyroNavX = new RobotGyro(navX);
+
+        // Assert
         assertEquals(true, gyroPigeon.m_isGyroAPigeon);
         assertEquals(pigeon, gyroPigeon.getPigeon());
         assertEquals(null, gyroPigeon.getNavX());
-
-        // TEST 2
         assertEquals(false, gyroNavX.m_isGyroAPigeon);
         assertEquals(navX, gyroNavX.getNavX());
         assertEquals(null, gyroNavX.getPigeon());
     }
 
     @Test
-    public void testHeading() {
-        // TESTS
+    public void testHeadingPigeon() {
+        // Arrange
+        MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
+        gyroPigeon = new RobotGyro(pigeon);
+
+        // Act & Assert
         assertEquals(-90, gyroPigeon.getHeading(270), 0.0001);
         assertEquals(-45, gyroPigeon.getHeading(315), 0.0001);
         assertEquals(-60, gyroPigeon.getHeading(-60), 0.0001);
@@ -59,97 +62,123 @@ public class RobotGyroUtilityTest {
     }
 
     @Test
-    public void testYawPitchRoll() {        
-        // TEST 1
+    public void testYawPitchRollPigeon() {
+        // Arrange
+        MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
+        gyroPigeon = new RobotGyro(pigeon);
+
+        // Assert
         assertEquals(0, gyroPigeon.getAngle(), 0.0001);
 
-        // TEST 2
+        // Act
         pigeon.setYaw(40);
+
+        // Assert
         assertEquals(40, gyroPigeon.getAngle(), 0.0001);
 
-        // TEST 3
+        // Act
         gyroPigeon.reset();
+
+        // Assert
         assertEquals(0, gyroPigeon.getAngle(), 0.0001);
 
-        // TEST 4
+        // Act
         pigeon.setYaw(-1457);
         pigeon.setCurrentPitch(100);
         pigeon.setCurrentRoll(100);
+
+        // Assert
         assertEquals(-1457, gyroPigeon.getAngle(), 0.0001);
         assertEquals(90, gyroPigeon.getPitch(), 0.0001);
         assertEquals(90, gyroPigeon.getRoll(), 0.0001);
 
-        // TEST 5
+        // Act
         pigeon.setCurrentPitch(45);
         pigeon.setCurrentRoll(45);
+
+        // Assert
         assertEquals(45, gyroPigeon.getPitch(), 0.0001);
         assertEquals(45, gyroPigeon.getRoll(), 0.0001);
 
-        // TEST 6
+        // Act
         pigeon.setCurrentPitch(0);
         pigeon.setCurrentRoll(0);
+
+        // Assert
         assertEquals(0, gyroPigeon.getPitch(), 0.0001);
         assertEquals(0, gyroPigeon.getRoll(), 0.0001);
 
-        // TEST 7
+        // Act
         pigeon.setCurrentPitch(-60);
         pigeon.setCurrentRoll(-60);
+
+        // Assert
         assertEquals(-60, gyroPigeon.getPitch(), 0.0001);
         assertEquals(-60, gyroPigeon.getRoll(), 0.0001);
 
-        // TEST 8
+        // Act
         pigeon.setCurrentPitch(-90);
         pigeon.setCurrentRoll(-90);
+
+        // Assert
         assertEquals(-90, gyroPigeon.getPitch(), 0.0001);
         assertEquals(-90, gyroPigeon.getRoll(), 0.0001);
 
-        // TEST 9
+        // Act
         pigeon.setCurrentPitch(-100);
         pigeon.setCurrentRoll(-100);
+
+        // Assert
         assertEquals(-90, gyroPigeon.getPitch(), 0.0001);
         assertEquals(-90, gyroPigeon.getRoll(), 0.0001);
     }
 
     @Test
-    public void testRates() {
-        // SETUP
-        pigeon.setYaw(0);
+    public void testRatesPigeon() {
+        // Arrange
+        MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
+        gyroPigeon = new RobotGyro(pigeon);
+        RobotTime robotTime = RobotTime.getInstance();
         gyroPigeon.updatePigeonDeltas();
 
-        // TEST 1
+        // Act
         robotTime.m_deltaTime = 5;
         pigeon.setYaw(0);
         gyroPigeon.updatePigeonDeltas();
+
+        // Assert
         assertEquals(0, gyroPigeon.getRate(), 1);
 
-        // TEST 2
+        // Act
         robotTime.m_deltaTime = 5;
         pigeon.setYaw(90);
         gyroPigeon.updatePigeonDeltas();
+
+        // Assert
         assertEquals(18000, gyroPigeon.getRate(), 0.001);
 
-        // TEST 3
+        // Act
         robotTime.m_deltaTime = 5;
         pigeon.setYaw(90);
         gyroPigeon.updatePigeonDeltas();
+
+        // Assert
         assertEquals(0, gyroPigeon.getRate(), 0.001);
 
-        // TEST 4
+        // Act
         robotTime.m_deltaTime = 3;
         pigeon.setYaw(-30);
         gyroPigeon.updatePigeonDeltas();
+        
+        // Assert
         assertEquals(-40000, gyroPigeon.getRate(), 0.001);
 
-        // TEST 5
+        // Act
         robotTime.m_deltaTime = 6;
         pigeon.setYaw(690);
         gyroPigeon.updatePigeonDeltas();
-        assertEquals(120000, gyroPigeon.getRate(), 0.001);
-    }
 
-    private void wait(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception e) {}
+        // Assert
+        assertEquals(120000, gyroPigeon.getRate(), 0.001);
     }
 }
