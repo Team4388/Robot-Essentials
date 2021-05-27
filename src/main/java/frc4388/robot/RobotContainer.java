@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.ExampleCSVSubsystem;
 import frc4388.robot.subsystems.LED;
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
@@ -35,6 +36,7 @@ public class RobotContainer {
             m_robotMap.leftBackMotor, m_robotMap.rightBackMotor, m_robotMap.driveTrain, m_robotMap.gyroDrive);
 
     private final LED m_robotLED = new LED(m_robotMap.LEDController);
+    private final ExampleCSVSubsystem m_exampleCSVSubsystem = new ExampleCSVSubsystem();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
