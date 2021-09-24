@@ -7,210 +7,269 @@
 
 package frc4388.utility;
 
+import java.awt.Color;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.invoke.MethodHandleProxies;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class CSV<E> {
+public class CSV<R> {
+    private static final Pattern SANITIZER = Pattern.compile("[^$\\w,]");
 
-    private static Predicate<String> quoteMatcher = Pattern.compile("\"*").asMatchPredicate();
-
-    private Path path;
-    private Class<E> clazz;
-    private UnaryOperator<String> headerPreprocessor = (String value) -> value;
-    private E[] data;
+    private final Supplier<R> generator;
+    private final IntFunction<R[]> arrayGenerator;
+    private final Map<String, BiConsumer<R, String>> setters;
 
     /**
-     * Creates a new {@code CSV} instance for a CSV file.
-     * 
-     * @param path  the path to a CSV file
-     * @param clazz a class representing an object with fields for the matching
-     *              columns in the CSV file. The first character of the column names
-     *              from the header in the CSV file will be made lowecase and
-     *              invalid characters will be removed when getting data.
-     * @see #getData()
+     * A binary string operator to be applied to the entire header of the CSV.
      */
-    public CSV(Path path, Class<E> clazz) {
-        this.path = path;
-        this.clazz = clazz;
+    protected String headerSanitizer(final String header) {
+        return SANITIZER.matcher(header).replaceAll("");
     }
 
     /**
-     * Sets a function to be applied to the string value of every column name in the
-     * header of this CSV.
-     *
-     * @param headerPreprocessor a function that returns a modified string
+     * A binary string operator to be applied to each name in the header of the CSV.
      */
-    public void setHeaderPreprocessor(UnaryOperator<String> headerPreprocessor) {
-        this.headerPreprocessor = headerPreprocessor;
+    protected String nameProcessor(final String name) {
+        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
 
     /**
-     * Shorthand for {@link #getData(Boolean) getData(true)}
+     * Creates a new {@code CSV} instance and prepares for populating the fields of
+     * objects created by the given generator. Fields of primitive types is not
+     * supported.
      * 
-     * @see #getData(Boolean)
-     */
-    public E[] getData() {
-        return getData(false);
-    }
-
-    /**
-     * Reads and parses the contents of the CSV file, and returns an array of the
-     * previously given class. Cells are parsed using the field's
-     * {@code valueOf(String)} function.
-     * 
-     * @param flush if the CSV file should be read from the path again
-     * @return the parsed data from the CSV file
-     * @throws RuntimeException (Caused by IOException) if an I/O error occurs
-     *                          opening the file
-     * @throws RuntimeException (Caused by NoSuchMethodException) if a constructor
-     *                          with no parameters is not found.
+     * @param generator a parameterless supplier which produces a new object with
+     *                  any number of fields corresponding to header names from a
+     *                  CSV file. The first character of the names from the header
+     *                  in the CSV file will be made lowercase and invalid
+     *                  characters will be removed to match Java naming conventions.
+     * @see #read(Path)
      */
     @SuppressWarnings("unchecked")
-    public E[] getData(boolean flush) {
-        if (flush || data == null) {
-            try {
-                String[] fieldNames = Stream
-                        .of(unescapedSplit(headerPreprocessor.apply(Files.lines(path).findFirst().orElseThrow())
-                                .replaceAll("[^$\\w,]", "")))
-                        .map(header -> (Character.toLowerCase(header.charAt(0)) + header.substring(1)).trim())
-                        .toArray(String[]::new);
-                Field[] fields = Stream.of(fieldNames).map(fieldName -> getField(clazz, fieldName))
-                        .toArray(Field[]::new);
-                Method[] parsers = Stream.of(fields).map(CSV::getMethod).toArray(Method[]::new);
-                Constructor<E> constructor = clazz.getConstructor();
-                data = Files.lines(path).skip(1).filter(Predicate.not(String::isBlank)).map(line -> {
+    public CSV(final Supplier<R> generator) {
+        final Class<?> clazz = generator.get().getClass();
+        final Map<Class<?>, Function<String, ?>> fieldParsers = new HashMap<>();
+        this.arrayGenerator = size -> (R[]) Array.newInstance(clazz, size);
+        this.generator = generator;
+        this.setters = new HashMap<>();
+        for (final Field field : clazz.getFields()) {
+            final Function<String, ?> parser = Modifier.isStatic(field.getModifiers()) ? null
+                    : fieldParsers.computeIfAbsent(field.getType(), CSV::getTypeParser);
+            if (parser != null)
+                this.setters.put(field.getName(), (final R obj, final String rawValue) -> {
                     try {
-                        var element = constructor.newInstance();
-                        String[] cells = unescapedSplit(line);
-                        IntStream.range(0, Math.min(fieldNames.length, cells.length)).forEach(
-                                i -> setParsedField(element, fields[i], fieldNames[i], parsers[i], cells[i].trim()));
-                        return element;
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        field.set(obj, rawValue.isEmpty() ? null : parser.apply(rawValue));
+                    } catch (final IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
-                }).toArray(size -> (E[]) Array.newInstance(clazz, size));
-            } catch (IOException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
+                });
         }
-        return data;
     }
 
     /**
-     * Retrieves a linearly interpolated value by finding the closest entries in the
-     * CSV data using the given {@code value} and {@code valueGetter}. The return
-     * value is interpolated between the values retrieved with {@code targetGetter}.
-     * 
-     * @param value        the value to linear interpolate to
-     * @param valueGetter  a getter for the given value, used to find the closest
-     *                     entries in the CSV for linear interpolation
-     * @param targetGetter a getter for the desired value, used to get adjacent
-     *                     values for linear interpolation
-     * @return a linearly interpolated value
+     * Reads and parses the contents of the given CSV file, and returns an array
+     * filled with populated objects created with the previously given generator.
+     * Cells are parsed using their corresponding field's {@code valueOf(String)}
+     * function.
+     *
+     * @param path the path to a CSV file
+     * @return the parsed data from the CSV file
+     * @throws IOException if an I/O error occurs opening the file
      */
-    public Number linearInterpolate(Number value, Function<E, Number> valueGetter, Function<E, Number> targetGetter) {
-        int i = getClosestRowIndex(value.doubleValue(), valueGetter);
-        int j = value.doubleValue() <= valueGetter.apply(data[i]).doubleValue() ? Math.max(i != 0 ? 0 : 1, i - 1)
-                : Math.min(i + 1, data.length - (i != data.length - 1 ? 1 : 2));
-        return lerp2(value, valueGetter.apply(data[i]), targetGetter.apply(data[i]), valueGetter.apply(data[j]),
-                targetGetter.apply(data[j]));
+    @SuppressWarnings("unchecked")
+    public R[] read(final Path path) throws IOException {
+        try (final BufferedReader reader = Files.newBufferedReader(path)) {
+            final BiConsumer<R, String>[] fieldSetters = Stream.of(headerSanitizer(reader.readLine()).split(","))
+                    .map(this::nameProcessor).map(setters::get).toArray(BiConsumer[]::new);
+            final Stream<String> lines = reader.lines();
+            return lines.filter(Predicate.not(String::isBlank))
+                    .map(line -> deserializeRecordString(line, fieldSetters, generator.get()))
+                    .toArray(this.arrayGenerator);
+        }
     }
 
-    private int getClosestRowIndex(Number value, Function<E, Number> valueGetter) {
-        return IntStream.range(0, data.length).boxed()
-                .min((a, b) -> Double.compare(Math.abs(valueGetter.apply(data[a]).doubleValue() - value.doubleValue()),
-                        Math.abs(valueGetter.apply(data[b]).doubleValue() - value.doubleValue())))
-                .orElse(data.length - 1);
-    }
-
-    private Number lerp2(Number x, Number x0, Number y0, Number x1, Number y1) {
-        Number f = (x.doubleValue() - x0.doubleValue()) / (x1.doubleValue() - x0.doubleValue());
-        return (1.0 - f.doubleValue()) * y0.doubleValue() + f.doubleValue() * y1.doubleValue();
-    }
-
-    private static Field getField(Class<?> clazz, String fieldName) {
+    @SuppressWarnings("unchecked")
+    private static Function<String, ?> getTypeParser(final Class<?> type) {
         try {
-            return clazz.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException | SecurityException e) {
-            System.err.println(MessageFormat.format(
-                    "Warning in thread \"{0}\" {1}: {2}.{3}, values from CSV column \"{3}\" will be dropped.",
-                    Thread.currentThread().getName(), e.getClass().getName(), clazz.getSimpleName(), fieldName));
+            return type.isAssignableFrom(String.class) ? Function.identity()
+                    : MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.publicLookup()
+                            .findStatic(type, "valueOf", MethodType.methodType(type, String.class)));
+        } catch (final NoSuchMethodException | IllegalAccessException e) {
             return null;
         }
     }
 
-    private static Method getMethod(Field field) {
-        try {
-            return field.getType().getMethod("valueOf", String.class);
-        } catch (NoSuchMethodException | NullPointerException e) {
-            return null;
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String[] unescapedSplit(CharSequence input) {
-        var openedQuotes = new AtomicInteger(input.charAt(0) == '"' ? 1 : 0);
-        List<String> strings = new ArrayList<>();
-        strings.add(input.chars().boxed().map(value -> String.valueOf((char) value.intValue()))
-                .reduce((result, element) -> {
-                    if (result.equals(",")) {
-                        strings.add("");
-                        return "";
-                    }
-                    switch (element) {
-                        case "\"":
-                            if (result.isBlank() || quoteMatcher.test(result)) {
-                                openedQuotes.incrementAndGet();
-                            } else {
-                                openedQuotes.decrementAndGet();
-                            }
-                            return result + element;
-                        case ",":
-                            if (openedQuotes.get() <= 0) {
-                                openedQuotes.set(0);
-                                strings.add(result);
-                                return "";
-                            }
-                        default:
-                            return result + element;
-                    }
-                }).orElseThrow());
-        return strings.toArray(String[]::new);
-    }
-
-    private void setParsedField(E element, Field field, String fieldName, Method parser, String value) {
-        try {
-            if (field == null)
-                throw new NoSuchFieldException(clazz.getSimpleName() + "." + fieldName);
-            if (parser == null && !field.getType().isInstance(value)) {
-                throw new NoSuchMethodException(field.getType().getName() + ".valueOf(String)");
+    private static <R> R deserializeRecordString(final String recordString,
+            final BiConsumer<R, String>[] fieldParseSetters, final R object) {
+        final int recordStringLength = recordString.length();
+        int fieldBeginIndex = 0, tryFieldEndFromIndex = 0, i = 0;
+        while (tryFieldEndFromIndex < recordStringLength && i < fieldParseSetters.length) {
+            final int tryFieldEndIndex = recordString.indexOf(',', tryFieldEndFromIndex);
+            String field = recordString
+                    .substring(fieldBeginIndex, tryFieldEndIndex == -1 ? recordStringLength : tryFieldEndIndex).strip();
+            if (!field.isEmpty() && (tryFieldEndFromIndex != fieldBeginIndex || field.charAt(0) == '"')) {
+                final int fieldLength = field.length();
+                if (countTrailing(field, '"') % 2 == 0) {
+                    tryFieldEndFromIndex = tryFieldEndIndex + 1;
+                    continue;
+                } else
+                    field = field.substring(1, fieldLength - 1).replace("\"\"", "\"");
             }
-            field.trySetAccessible();
-            field.set(element, parser != null ? (value.isBlank() ? null : parser.invoke(element, value)) : value);
-        } catch (IllegalAccessException | NoSuchFieldException | NoSuchMethodException e) {
-            System.err.println(MessageFormat.format(
-                    "Warning in thread \"{0}\" {1}: {2}, value \"{3}\" from CSV column \"{4}\" dropped.",
-                    Thread.currentThread().getName(), e.getClass().getName(), e.getMessage(), value, fieldName));
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            final BiConsumer<R, String> setter = fieldParseSetters[i];
+            if (setter != null)
+                setter.accept(object, field);
+            tryFieldEndFromIndex = fieldBeginIndex = tryFieldEndIndex + 1;
+            i++;
         }
+        return object;
     }
 
+    private static int countTrailing(final String str, final char c) {
+        final int l = str.length();
+        int count = 0;
+        while (str.charAt(l - count - 1) == c && count < l)
+            count++;
+        return count;
+    }
+
+    public static class ReflectionTable {
+        public static <T> String create(final T[] objects) {
+            final Field[] fields = Stream.of(objects).flatMap(object -> Stream.of(object.getClass().getFields()))
+                    .distinct().toArray(Field[]::new);
+            final List<List<ReflectionTable>> rows = new ArrayList<>();
+            rows.add(Stream.of(fields).map(ReflectionTable::new).collect(Collectors.toList()));
+            rows.addAll(Stream.of(objects).map(
+                    obj -> Stream.of(fields).map(field -> new ReflectionTable(obj, field)).collect(Collectors.toList()))
+                    .collect(Collectors.toList()));
+            final int[] columnWidths = rows.stream()
+                    .map(row -> row.stream().map(cell -> cell.string).mapToInt(String::length).toArray())
+                    .reduce(new int[fields.length], (result, row) -> IntStream.range(0, row.length)
+                            .map(i -> Math.max(result[i], row[i])).toArray());
+            IntStream.range(0, fields.length).forEach(i -> {
+                final var columnSummaryStatistics = rows.stream().skip(1)
+                        .mapToDouble(row -> row.get(i).getValue().doubleValue()).summaryStatistics();
+                rows.stream().skip(1).forEach(row -> row.get(i).colorByValue(columnSummaryStatistics.getMin(),
+                        columnSummaryStatistics.getMax()));
+            });
+            return rows.stream()
+                    .map(row -> IntStream.range(0, row.size())
+                            .mapToObj(i -> String.format(
+                                    MessageFormat.format("{0} %{1}{2}s {3}", row.get(i).escape,
+                                            row.get(i).padRight ? "-" : "", columnWidths[i], RESET_STYLE),
+                                    row.get(i).string))
+                            .collect(Collectors.joining("|")))
+                    .collect(Collectors.joining(LF));
+        }
+
+        private static final Color GRADIENT_MIN = new Color(0, 51, 0);
+        private static final Color GRADIENT_MAX = new Color(0, 255, 0);
+        private static final String CONTROL = "\033";
+        private static final String CSI = "[";
+        private static final String LF = "\n";
+        private static final String RESET = "0";
+        private static final String BOLD = "1";
+        private static final String ITALIC = "3";
+        private static final String UNDERLINE = "4";
+        private static final String BACKGROUND_RED = "41";
+        private static final String FOREGROUND = "38";
+        private static final String BACKGROUND = "48";
+        private static final String TRUECOLOR = "2";
+        private static final String SEPARATOR = ";";
+        private static final String SGR = "m";
+        private static final String HEADER_STYLE = CONTROL + CSI + BOLD + SEPARATOR + UNDERLINE + SGR;
+        private static final String NULL_STYLE = CONTROL + CSI + ITALIC + SGR;
+        private static final String ERROR_STYLE = CONTROL + CSI + ITALIC + SGR + CONTROL + CSI + BACKGROUND_RED + SGR;
+        private static final String RESET_STYLE = CONTROL + CSI + RESET + SGR;
+        private Object value;
+        private String string;
+        private boolean padRight;
+        private String escape;
+
+        private ReflectionTable(final Object obj, final Field field) {
+            try {
+                value = field.get(obj);
+                string = Objects.toString(value);
+                padRight = !Number.class.isAssignableFrom(field.getType());
+                escape = Objects.isNull(value) ? NULL_STYLE : "";
+            } catch (final IllegalAccessException | IllegalArgumentException e) {
+                value = null;
+                string = e.getClass().getSimpleName();
+                padRight = false;
+                escape = ERROR_STYLE;
+            }
+        }
+
+        private ReflectionTable(final Field field) {
+            value = null;
+            string = field.getName();
+            padRight = true;
+            escape = HEADER_STYLE;
+        }
+
+        private Number getValue() {
+            return padRight ? Objects.hashCode(string) : Objects.requireNonNullElse((Number) value, 0);
+        }
+
+        private void colorByValue(final Number min, final Number max) {
+            if (Objects.nonNull(value)) {
+                final double normal = (getValue().doubleValue() - min.doubleValue())
+                        / (max.doubleValue() - min.doubleValue());
+                final Color color = new Color(range(normal, GRADIENT_MIN.getRed(), GRADIENT_MAX.getRed()),
+                        range(normal, GRADIENT_MIN.getGreen(), GRADIENT_MAX.getGreen()),
+                        range(normal, GRADIENT_MIN.getBlue(), GRADIENT_MAX.getBlue()));
+                escape += (contrastRatio(color, Color.BLACK) > contrastRatio(Color.WHITE, color)
+                        ? colorTo24BitSGR(Color.BLACK, false)
+                        : colorTo24BitSGR(Color.WHITE, false)) + colorTo24BitSGR(color, true);
+            }
+        }
+
+        private static String colorTo24BitSGR(final Color color, final boolean background) {
+            return CONTROL + CSI + (background ? BACKGROUND : FOREGROUND) + SEPARATOR + TRUECOLOR + SEPARATOR
+                    + color.getRed() + SEPARATOR + color.getGreen() + SEPARATOR + color.getBlue() + SGR;
+        }
+
+        private static int range(final double normal, final int min, final int max) {
+            return (int) (normal * (max - min) + min);
+        }
+
+        /* https://www.w3.org/TR/WCAG20/#contrast-ratiodef */
+        private static float contrastRatio(final Color lighter, final Color darker) {
+            return (relativeLuminance(lighter) + 0.05f) / (relativeLuminance(darker) + 0.05f);
+        }
+
+        /* https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef */
+        private static float relativeLuminance(final Color color) {
+            final float[] components = color.getRGBComponents(null);
+            final float r = components[0] <= 0.03928f ? components[0] / 12.92f
+                    : (float) Math.pow((components[0] + 0.055f) / 1.055f, 2.4f);
+            final float g = components[1] <= 0.03928f ? components[1] / 12.92f
+                    : (float) Math.pow((components[1] + 0.055f) / 1.055f, 2.4f);
+            final float b = components[2] <= 0.03928f ? components[2] / 12.92f
+                    : (float) Math.pow((components[2] + 0.055f) / 1.055f, 2.4f);
+            return 0.2126f * r + 0.7152f * g + 0.0722f * b;
+        }
+    }
 }

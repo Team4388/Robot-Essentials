@@ -7,7 +7,7 @@
 
 package frc4388.robot.subsystems;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +25,9 @@ public class ExampleCSVSubsystemTest {
     }
 
     @Test
-    public void testGetData() {
-        assertTrue(exampleCSVSubsystem.m_distanceCSV.getData(true).length > 0);
+    public void testValidData() {
+        assertEquals(62, exampleCSVSubsystem.getDuration(7.0).intValue());
+        assertEquals(56, exampleCSVSubsystem.getDuration(6.5).intValue());
+        assertEquals(true, exampleCSVSubsystem.getWind(11.0));
     }
-
 }

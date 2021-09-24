@@ -1,4 +1,4 @@
-Distance (miles) ,Duration (minutes) ,Date (yyyy-mm-dd) ,"Wind (true,false)"
+Distance (miles) ,Duration (minutes) ,Date (yyyy-mm-dd) ,Wind (true/false)
 1.2              ,12                 ,2021-11-20        ,false
 1.6              ,14                 ,2021-10-29        ,true
 1.7              ,10                 ,2021-12-06        ,true
@@ -8,7 +8,7 @@ Distance (miles) ,Duration (minutes) ,Date (yyyy-mm-dd) ,"Wind (true,false)"
 3.2              ,38                 ,2021-05-12        ,false
 3.4              ,43                 ,2021-10-05        ,false
 3.5              ,30                 ,2021-12-07        ,true
-4.6              ,49                 ,2021-07-09        ,true
+4.6              ,                   ,2021-07-09        ,true
 4.9              ,39                 ,2021-07-27        ,false
 6.0              ,50                 ,2021-11-11        ,true
 7.0              ,62                 ,2021-07-20        ,true
