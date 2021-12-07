@@ -6,6 +6,8 @@ package frc4388.utility.autonomousReplay.nodes;
 
 import java.util.List;
 
+import frc4388.utility.autonomousReplay.AutonomousReplayNode;
+
 /** Add your docs here. */
 public class AutonomousReplayNodeGroup implements AutonomousReplayNode {
     private List<AutonomousReplayNode> replayNodes;

@@ -6,6 +6,8 @@ package frc4388.utility.autonomousReplay.nodes;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import frc4388.utility.autonomousReplay.AutonomousReplayNode;
+
 import java.util.List;
 
 /** Add your docs here. */
