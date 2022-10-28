@@ -18,16 +18,6 @@ import frc4388.utility.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final class DriveConstants {
-        public static final int DRIVE_LEFT_FRONT_CAN_ID = 2;
-        public static final int DRIVE_RIGHT_FRONT_CAN_ID = 4;
-	    public static final int DRIVE_LEFT_BACK_CAN_ID = 3;
-        public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
-        
-        public static final int DRIVE_PIGEON_ID = 6;
-
-        public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
-    }
 
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
