@@ -20,7 +20,7 @@ import frc4388.utility.RobotTime;
 /**
  * Add your docs here.
  */
-public class DifferentialDrive extends SubsystemBase {
+public class DifDrive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -36,7 +36,7 @@ public class DifferentialDrive extends SubsystemBase {
   /**
    * Add your docs here.
    */
-  public DifferentialDrive(WPI_TalonFX leftFrontMotor, WPI_TalonFX rightFrontMotor, WPI_TalonFX leftBackMotor,
+  public DifDrive(WPI_TalonFX leftFrontMotor, WPI_TalonFX rightFrontMotor, WPI_TalonFX leftBackMotor,
       WPI_TalonFX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
 
     m_leftFrontMotor = leftFrontMotor;
