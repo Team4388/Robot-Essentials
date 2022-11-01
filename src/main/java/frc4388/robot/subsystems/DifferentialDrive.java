@@ -36,7 +36,7 @@ public class DifferentialDrive extends SubsystemBase {
   /**
    * Add your docs here.
    */
-  public Drive(WPI_TalonFX leftFrontMotor, WPI_TalonFX rightFrontMotor, WPI_TalonFX leftBackMotor,
+  public DifferentialDrive(WPI_TalonFX leftFrontMotor, WPI_TalonFX rightFrontMotor, WPI_TalonFX leftBackMotor,
       WPI_TalonFX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
 
     m_leftFrontMotor = leftFrontMotor;
