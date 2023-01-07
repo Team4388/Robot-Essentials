@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
-import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.LED;
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
@@ -31,9 +30,6 @@ public class RobotContainer {
     private final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
-    private final Drive m_robotDrive = new Drive(m_robotMap.leftFrontMotor, m_robotMap.rightFrontMotor,
-            m_robotMap.leftBackMotor, m_robotMap.rightBackMotor, m_robotMap.driveTrain, m_robotMap.gyroDrive);
-
     private final LED m_robotLED = new LED(m_robotMap.LEDController);
 
     /* Controllers */
@@ -48,9 +44,6 @@ public class RobotContainer {
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        m_robotDrive.setDefaultCommand(
-                new RunCommand(() -> m_robotDrive.driveWithInput(getDriverController().getLeftYAxis(),
-                        getDriverController().getRightXAxis()), m_robotDrive));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
@@ -64,8 +57,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         // test command to spin the robot while pressing A on the driver controller
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-                .whileHeld(() -> m_robotDrive.driveWithInput(0, 1));
 
         /* Operator Buttons */
         // activates "Lit Mode"
