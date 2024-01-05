@@ -1,7 +1,6 @@
 package frc4388.utility.controller;
 
 import edu.wpi.first.wpilibj2.command.button.Button;
-import frc4388.utility.controller.XboxController;
 
 /**
  * Mapping for the Xbox controller triggers to allow triggers to be defined as
@@ -32,7 +31,7 @@ public class XboxTriggerButton extends Button {
 	}
 
 	/** {@inheritDoc} */
-	@Override
+	// @Override
 	public boolean get() {
 		if (m_trigger == RIGHT_TRIGGER) {
 			return m_controller.getRightTrigger();
