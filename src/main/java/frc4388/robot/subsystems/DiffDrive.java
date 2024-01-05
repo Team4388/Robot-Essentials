@@ -80,6 +80,6 @@ public class DiffDrive extends SubsystemBase {
     SmartDashboard.putBoolean("Is Gyro a Pigeon?", m_gyro.m_isGyroAPigeon);
     SmartDashboard.putNumber("Turn Rate", m_gyro.getRate());
     SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
-    SmartDashboard.putData(m_gyro);
+    //SmartDashboard.putData(m_gyro);
   }
 }
