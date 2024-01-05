@@ -111,6 +111,28 @@ public final class Constants {
         public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
       }
     
+      public static final class VisionConstants {
+        public static final String NAME = "photonCamera";
+    
+        public static final int LIME_HIXELS = 640;
+        public static final int LIME_VIXELS = 480;
+    
+        public static final double H_FOV = 59.6;
+        public static final double V_FOV = 45.7;
+    
+        public static final double LIME_HEIGHT = 6.0;
+        public static final double LIME_ANGLE = 55.0;
+    
+        // public static final double HIGH_TARGET_HEIGHT = 46.0;
+        public static final double HIGH_TAPE_HEIGHT = 44.0;
+        
+        // public static final double MID_TARGET_HEIGHT = 34.0;
+        public static final double MID_TAPE_HEIGHT = 24.0;
+    
+        public static final double APRIL_HEIGHT = -1.0; // TODO: find actual value
+    
+      }
+    
     public static final class DriveConstants {
         public static final int DRIVE_PIGEON_ID = 6;
 
