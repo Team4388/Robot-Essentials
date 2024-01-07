@@ -68,6 +68,11 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
   }
 
+  @Override
+  public void disabledExit() {
+    DeferredBlock.execute();
+  }
+
   /**
    * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
    */
