@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.Swerve.JoystickPlayback;
+import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.subsystems.LED;
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
@@ -57,6 +59,18 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         // test command to spin the robot while pressing A on the driver controller
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                     () -> getDeadbandedDriverController().getLeftX(),
+        //                                     () -> getDeadbandedDriverController().getLeftY(),
+        //                                     () -> getDeadbandedDriverController().getRightX(),
+        //                                     () -> getDeadbandedDriverController().getRightY(),
+        //                                     "Blue1Path.txt"))
+        //     .onFalse(new InstantCommand());
+
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
+        //     .onFalse(new InstantCommand()); 
 
         /* Operator Buttons */
         // activates "Lit Mode"
