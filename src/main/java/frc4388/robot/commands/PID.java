@@ -26,7 +26,8 @@ public abstract class PID extends CommandBase {
 	/** produces the error from the setpoint */
 	public abstract double getError();
 	
-	/** figure it out bitch */
+
+	/** todo: javadoc */
 	public abstract void runWithOutput(double output);
 
 	// Called when the command is initially scheduled.
