@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.RobotTime;
-
+//import frc4388.robot.subsystems.LED;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -22,16 +22,17 @@ import frc4388.utility.RobotTime;
  */
 public class Robot extends TimedRobot {
   Command m_autonomousCommand;
-  
+
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
-
+  //private LED mled = new LED();
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -40,14 +41,16 @@ public class Robot extends TimedRobot {
   /**
    * This function is called every robot packet, no matter the mode. Use
    * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
+   * autonomous, teleoperated and test.doubl
    *
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {
+  public void robotPeriodic() {   
     m_robotTime.updateTimes();
+    //System.out.println(m_robotContainer.limelight.isNearSpeaker());
+    //mled.updateLED();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -119,7 +122,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    
+  //  m_robotContainer.m_robotMap.rightFront.go(m_robotContainer.getDeadbandedDriverController().getLeft());
   }
 
   /**

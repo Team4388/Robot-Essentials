@@ -1,13 +1,13 @@
 package frc4388.utility.controller;
 
-import edu.wpi.first.wpilibj2.command.button.Button;
+//import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * Mapping for the Xbox controller triggers to allow triggers to be defined as
  * buttons in {@link frc4388.robot.OI}. Checks to see if the given trigger 
  * exceeds a tolerance defined in {@link XboxController}.
  */
-public class XboxTriggerButton extends Button {
+public class XboxTriggerButton {//extends Trigger {
 	public static final int RIGHT_TRIGGER = 0;
 	public static final int LEFT_TRIGGER = 1;
 	public static final int RIGHT_AXIS_UP_TRIGGER = 2;
