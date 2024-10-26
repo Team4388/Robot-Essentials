@@ -42,6 +42,7 @@ public class PlaybackChooser {
         m_playback = m_choosers.get(0);
         nextChooser();
 
+        // ! This does not work, why?
         Shuffleboard.getTab("Auto Chooser")
             .add("Add Sequence", new InstantCommand(() -> nextChooser()))
             .withPosition(4, 0);
@@ -66,9 +67,15 @@ public class PlaybackChooser {
     public void nextChooser() {
         SendableChooser<Command> chooser = m_choosers.get(m_cmdNum++);
 
-        for (String auto : m_dir.list()) {
-            chooser.addOption(auto, new JoystickPlayback(m_swerve, auto));
+        String[] dirs = m_dir.list();
+
+        if(dirs != null){ // Fix funny error
+            for (String auto : dirs) {
+                chooser.addOption(auto, new JoystickPlayback(m_swerve, auto));
+            }
         }
+
+        
         for (var cmd_name : m_commandPool.keySet()) {
             chooser.addOption(cmd_name, m_commandPool.get(cmd_name));
         }

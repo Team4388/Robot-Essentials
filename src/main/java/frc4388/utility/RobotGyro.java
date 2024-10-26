@@ -7,20 +7,22 @@
 
 package frc4388.utility;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+// import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 // import edu.wpi.first.wpilibj.GyroBase;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+// import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * Gyro class that allows for interchangeable use between a pigeon and a navX
  */
-public class RobotGyro implements Gyro {
+public class RobotGyro {
     private RobotTime m_robotTime = RobotTime.getInstance();
 
-    private WPI_Pigeon2 m_pigeon = null;
+    private Pigeon2 m_pigeon = null;
     private AHRS m_navX = null;
     public boolean m_isGyroAPigeon; //true if pigeon, false if navX
 
@@ -34,7 +36,7 @@ public class RobotGyro implements Gyro {
      * Creates a Gyro based on a pigeon
      * @param gyro the gyroscope to use for Gyro
      */
-    public RobotGyro(WPI_Pigeon2 gyro) {
+    public RobotGyro(Pigeon2 gyro) {
         m_pigeon = gyro;
         m_isGyroAPigeon = true;
     }
@@ -54,8 +56,8 @@ public class RobotGyro implements Gyro {
     public void resetZeroValues() {
         if (!m_isGyroAPigeon) return;
 
-        pitchZero = m_pigeon.getPitch();
-        rollZero =  m_pigeon.getRoll();
+        // pitchZero = m_pigeon.getPitch();
+        // rollZero =  m_pigeon.getRoll();
     }
 
     /**
@@ -84,16 +86,15 @@ public class RobotGyro implements Gyro {
      * is typically done when the robot is first turned on while it's sitting at rest before the
      * competition starts.
      */
-    @Override
     public void calibrate() {
-        if (m_isGyroAPigeon) {
-            m_pigeon.calibrate();
-        } else {
-            m_navX.calibrate();
-        }
+        return;
+        // if (m_isGyroAPigeon) {
+        //     m_pigeon.calibrate();
+        // } else {
+        //     m_navX.calibrate();
+        // }
     }
 
-    @Override
     public void reset() {
         resetZeroValues();
 
@@ -102,6 +103,73 @@ public class RobotGyro implements Gyro {
         } else {
             m_navX.reset();
         }
+
+    }
+
+    public void reset(double val) {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(val);
+        } else {
+            m_navX.reset();
+        }
+
+    }
+
+    public void resetFlip() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(180);
+        } else {
+            m_navX.reset();
+        }
+
+    }
+
+    public void resetNinety() {
+        resetZeroValues();
+        
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(90);
+        } else {
+            m_navX.reset();
+        }
+        
+    }
+
+    public void resetTwoSeventy() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(270);
+        } else {
+            m_navX.reset();
+        }
+
+    }
+
+    public void resetRightSideBlue() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(60);
+        } else {
+            m_navX.reset();
+        }   
+
+    }
+
+    public void resetAmpSide() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(-60);
+        } else {
+            m_navX.reset();
+        }   
+
     }
 
     /**
@@ -113,16 +181,19 @@ public class RobotGyro implements Gyro {
 	 *					Roll is within [-90,+90] degrees.
      */
     private double[] getPigeonAngles() {
-        double[] ypr = new double[3];
-        m_pigeon.getYawPitchRoll(ypr);
+        m_pigeon.getAngle();
+        var rotation = m_pigeon.getRotation3d();
 
-        return new double[] {ypr[0], (ypr[1] - pitchZero), (ypr[2] - rollZero)};
+        return new double[] {RobotUnits.radiansToDegrees(rotation.getX() - rollZero), RobotUnits.radiansToDegrees(rotation.getY() - pitchZero), RobotUnits.radiansToDegrees(rotation.getZ())};
     }
 
-    @Override
+    public Rotation2d getRotation2d() {
+        return m_pigeon.getRotation2d();
+    }
+
     public double getAngle() {
         if (m_isGyroAPigeon) {
-            return getPigeonAngles()[0];
+            return getPigeonAngles()[2];
         } else {
             return m_navX.getAngle();
         }
@@ -176,7 +247,6 @@ public class RobotGyro implements Gyro {
         }
     }
 
-    @Override
     public double getRate() {
         if (m_isGyroAPigeon) {
             return m_deltaPigeonAngle / m_robotTime.m_deltaTime * 1000;
@@ -185,7 +255,7 @@ public class RobotGyro implements Gyro {
         }
     }
 
-    public WPI_Pigeon2 getPigeon(){
+    public Pigeon2 getPigeon(){
         return m_pigeon;
     }
 
@@ -193,7 +263,6 @@ public class RobotGyro implements Gyro {
         return m_navX;
     }
 
-    @Override
     public void close() throws Exception {
 
     }

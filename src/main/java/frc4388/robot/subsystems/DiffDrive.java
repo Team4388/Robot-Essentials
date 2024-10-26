@@ -7,7 +7,8 @@
 
 package frc4388.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,23 +27,25 @@ public class DiffDrive extends SubsystemBase {
 
   private RobotTime m_robotTime = RobotTime.getInstance();
 
-  private WPI_TalonFX m_leftFrontMotor;
-  private WPI_TalonFX m_rightFrontMotor;
-  private WPI_TalonFX m_leftBackMotor;
-  private WPI_TalonFX m_rightBackMotor;
+  private TalonFX m_leftFrontMotor;
+  private TalonFX m_rightFrontMotor;
+  private TalonFX m_leftBackMotor;
+  private TalonFX m_rightBackMotor;
   private DifferentialDrive m_driveTrain;
   private RobotGyro m_gyro;
 
   /**
    * Add your docs here.
    */
-  public DiffDrive(WPI_TalonFX leftFrontMotor, WPI_TalonFX rightFrontMotor, WPI_TalonFX leftBackMotor,
-      WPI_TalonFX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
+  public DiffDrive(TalonFX leftFrontMotor, TalonFX rightFrontMotor, TalonFX leftBackMotor,
+      TalonFX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
 
     m_leftFrontMotor = leftFrontMotor;
     m_rightFrontMotor = rightFrontMotor;
     m_leftBackMotor = leftBackMotor;
     m_rightBackMotor = rightBackMotor;
+    m_leftBackMotor .setControl(new Follower(m_leftFrontMotor.getDeviceID(), false));
+    m_rightBackMotor.setControl(new Follower(m_rightBackMotor.getDeviceID(), false));
     m_driveTrain = driveTrain;
     m_gyro = gyro;
   }

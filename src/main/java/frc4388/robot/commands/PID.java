@@ -4,10 +4,10 @@
 
 package frc4388.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc4388.utility.Gains;
 
-public abstract class PID extends CommandBase {
+public abstract class PID extends Command {
 	protected Gains  gains;
 	private   double output    = 0;
 	private   double tolerance = 0;

@@ -1,0 +1,20 @@
+AUTO file format
+
+HEADER static size 0x5
+0x00 BYTE   NUM AXES: defualts to 6
+0x01 BYTE   NUM POV: defualts to 1
+0x02 BYTE   NUM CONTROLLERS: defualts to 2
+0x03 SHORT  FRAMES: any value greator or equal than one.
+
+FRAME PER CONTROLLER: defualt size 0x34
+0x00 DOUBLE AXES[NUM AXES]
+0x30 SHORT  BUTTONS
+0x32 SHORT  POVs[NUM POV]
+
+FRAME: size varrys
+FRAME PER CONTROLLER[NUM CONTROLLERS]
+INT         UNIXTIMESTAMP
+
+FILE:
+HEADER
+FRAME[FRAMES]
