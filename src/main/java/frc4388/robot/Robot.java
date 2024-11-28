@@ -7,11 +7,17 @@
 
 package frc4388.robot;
 
+import java.util.List;
+import java.util.logging.Level;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.RobotTime;
+import frc4388.utility.Status;
+import frc4388.utility.Subsystem;
+import frc4388.utility.Status.Report;
 //import frc4388.robot.subsystems.LED;
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -125,10 +131,18 @@ public class Robot extends TimedRobot {
   //  m_robotContainer.m_robotMap.rightFront.go(m_robotContainer.getDeadbandedDriverController().getLeft());
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
   @Override
-  public void testPeriodic() {
+  public void testInit() {
+    for(int i=0;i<m_robotContainer.subsystems.size();i++){
+
+      Subsystem subsystem = m_robotContainer.subsystems.get(i);
+      subsystem.Log("Subsystem diagnostic report for " + subsystem.getName() + ":");
+      Status status = subsystem.diagnosticStatus();
+
+      for(int a=0;a<status.reports.size();a++){
+        Report r = status.reports.get(i);
+        subsystem.Log(r.toString());
+      }
+    }
   }
 }

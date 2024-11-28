@@ -7,6 +7,8 @@
 
 package frc4388.robot.subsystems;
 
+import java.util.logging.Level;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -17,11 +19,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotTime;
+import frc4388.utility.Status;
+import frc4388.utility.Subsystem;
+import frc4388.utility.Status.ReportLevel;
 
 /**
  * Add your docs here.
  */
-public class DiffDrive extends SubsystemBase {
+public class DiffDrive extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -84,5 +89,24 @@ public class DiffDrive extends SubsystemBase {
     SmartDashboard.putNumber("Turn Rate", m_gyro.getRate());
     SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
     //SmartDashboard.putData(m_gyro);
+  }
+
+
+  @Override
+  public String getSubsystemName() {
+      return "Diff Drive";
+  }
+
+  @Override
+  public Status queryStatus() {
+      Status status = new Status();
+      // TODO: Add Stuff
+      return status;
+  }
+
+  @Override
+  public Status diagnosticStatus() {
+      Log("Diagnostic info for this has not been inplemented!"); //TODO
+      return new Status();
   }
 }

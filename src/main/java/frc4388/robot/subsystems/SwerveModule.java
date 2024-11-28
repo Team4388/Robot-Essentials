@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems;
 
+import java.util.logging.Level;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -33,8 +35,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
+import frc4388.utility.Status;
+import frc4388.utility.Subsystem;
+import frc4388.utility.Status.ReportLevel;
 
-public class SwerveModule extends SubsystemBase {
+public class SwerveModule extends Subsystem {
+    private String name = "Null";
     private TalonFX driveMotor;
     private TalonFX angleMotor;
     private CANcoder encoder;
@@ -47,7 +53,8 @@ public class SwerveModule extends SubsystemBase {
   
     
     /** Creates a new SwerveModule. */
-    public SwerveModule(TalonFX driveMotor, TalonFX angleMotor, CANcoder encoder, double offset) {
+    public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANcoder encoder, double offset) {
+        this.name = name;
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
@@ -225,6 +232,29 @@ public class SwerveModule extends SubsystemBase {
 
     public void reset() {
         // encoder.setPosition(0);
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return this.name;
+    }
+
+    @Override
+    public Status queryStatus() {
+        Status status = new Status();
+        
+        status.addReport(ReportLevel.INFO, "Drive motor speed: " + this.driveMotor.get());
+        status.addReport(ReportLevel.INFO, "Angle motor speed: " + this.angleMotor.get());
+        //TODO: Add more status things
+
+
+        return status;
+    }
+
+    @Override
+    public Status diagnosticStatus() {
+        Log("Diagnostic info for this swereve module has not been inplemented!"); //TODO
+        return new Status();
     }
 
     // public double getCurrent() {
