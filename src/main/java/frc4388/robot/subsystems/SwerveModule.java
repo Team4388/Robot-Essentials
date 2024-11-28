@@ -16,12 +16,14 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MagnetHealthValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -251,10 +253,19 @@ public class SwerveModule extends Subsystem {
         return status;
     }
 
+    public boolean motorsAlive() {
+        return this.driveMotor.isAlive() && this.angleMotor.isAlive();
+    }
+
     @Override
     public Status diagnosticStatus() {
-        Log("Diagnostic info for this swereve module has not been inplemented!"); //TODO
-        return new Status();
+        Status status = new Status();
+        
+        status.diagnoseHardwareCTRE("Drive", this.driveMotor);
+        status.diagnoseHardwareCTRE("Angle", this.angleMotor);
+        status.diagnoseHardwareCTRE("Steer", this.encoder);
+        
+        return status;
     }
 
     // public double getCurrent() {
