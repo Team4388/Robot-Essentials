@@ -21,6 +21,7 @@ import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotUnits;
 import frc4388.utility.Status;
 import frc4388.utility.Subsystem;
+import frc4388.utility.Status.Report;
 import frc4388.utility.Status.ReportLevel;
 
 public class SwerveDrive extends Subsystem {
@@ -329,26 +330,31 @@ public class SwerveDrive extends Subsystem {
 
   @Override
   public String getSubsystemName() {
-      return "Swerve Drive Controller";
+    return "Swerve Drive Controller";
   }
 
   @Override
   public Status queryStatus() {
-      Status status = new Status();
-      
-      status.addReport(ReportLevel.INFO, "Gyro Angle: " + this.gyro.getAngle());
-      status.addReport(ReportLevel.INFO, "Shift State: " + this.speedAdjust);
-      //TODO: Add more status things
-      
-      return status;
+    Status status = new Status();
+    
+    status.addReport(ReportLevel.INFO, "Gyro Angle: " + this.gyro.getAngle());
+    status.addReport(ReportLevel.INFO, "Shift State: " + this.speedAdjust);
+    //TODO: Add more status things
+    
+    return status;
   }
 
   @Override
   public Status diagnosticStatus() {
-      Log("Diagnostic info for this has not been inplemented!"); //TODO
-      return new Status();
+    Status status = new Status();
+    for (SwerveModule module : modules) {
+      for (Report moduleDignostic : module.diagnosticStatus().reports) {
+        status.addReport(moduleDignostic.reportLevel, "[" + module.getSubsystemName() + "] " + moduleDignostic.description);
+      }
+    }
+
+    status.diagnoseHardwareCTRE("Swerve Gyro", gyro.getPigeon());
+    
+    return status;
   }
-
-  
-
 }
