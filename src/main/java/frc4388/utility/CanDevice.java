@@ -27,8 +27,12 @@ public class CanDevice {
         return true; //TODO: Link this with Device Finder
     }
 
+    public String getName() {
+        return "CAN ID " + this.id + " ( " + this.name + " ) ";
+    }
+
     public void Log(String str){
-        System.out.println("CAN ID " + this.id + " ( " + this.name + " ) " + str);
+        System.out.println(getName() + " - " + str);
     }
 
     public Status queryStatus() {

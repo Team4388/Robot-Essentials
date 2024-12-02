@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import frc4388.utility.Status;
 import frc4388.utility.Subsystem;
 import frc4388.utility.DeviceFinder;
 import frc4388.utility.Status.Report;
+import frc4388.utility.Status.ReportLevel;
 //import frc4388.robot.subsystems.LED;
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -137,8 +139,10 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
 
+    List<String> errors = new ArrayList<>();
+
     // Subsystems header
-    System.out.println(new String(Base64.getDecoder().decode("IF9fICAgICAgIF8gICAgICAgICAgICAgICAgICAgXyAgICAgICAgICAgICAgICAgICAgIAovIF9cXyAgIF98IHxfXyAgX19fIF8gICBfIF9fX3wgfF8gX19fIF8gX18gX19fICBfX18gClwgXHwgfCB8IHwgJ18gXC8gX198IHwgfCAvIF9ffCBfXy8gXyBcICdfIGAgXyBcLyBfX3wKX1wgXCB8X3wgfCB8XykgXF9fIFwgfF98IFxfXyBcIHx8ICBfXy8gfCB8IHwgfCBcX18gXApcX18vXF9fLF98XyBfXy98X19fL1xfXywgfF9fXy9cX19cX19ffF98IHxffCB8X3xfX18vCiAgICAgICAgICAgICAgICAgICAgfF9fXy8gICAgICAgICAgICAgICAgICAgICAgICAgICA=")));
+    System.out.println(new String(Base64.getDecoder().decode("IOKWl+KWhOKWhOKWluKWl+KWliDilpfilpbilpfiloTiloTilpYgIOKWl+KWhOKWhOKWluKWl+KWliAg4paX4paW4paX4paE4paE4paW4paX4paE4paE4paE4paW4paX4paE4paE4paE4paW4paX4paWICDilpfilpYg4paX4paE4paE4paWCuKWkOKWjCAgIOKWkOKWjCDilpDilozilpDilowg4paQ4paM4paQ4paMICAgIOKWneKWmuKWnuKWmOKWkOKWjCAgICAg4paIICDilpDilowgICDilpDilpvilprilp7ilpzilozilpDilowgICAKIOKWneKWgOKWmuKWluKWkOKWjCDilpDilozilpDilpviloDilprilpYg4pad4paA4paa4paWICDilpDilowgIOKWneKWgOKWmuKWliAg4paIICDilpDilpviloDiloDilpjilpDilowgIOKWkOKWjCDilp3iloDilprilpYK4paX4paE4paE4pae4paY4pad4paa4paE4pae4paY4paQ4paZ4paE4pae4paY4paX4paE4paE4pae4paYICDilpDilowg4paX4paE4paE4pae4paYICDiloggIOKWkOKWmeKWhOKWhOKWluKWkOKWjCAg4paQ4paM4paX4paE4paE4pae4paY")));
 
     for(int i=0;i<m_robotContainer.subsystems.size();i++){
 
@@ -148,13 +152,15 @@ public class Robot extends TimedRobot {
 
       for(int a=0;a<status.reports.size();a++){
         Report r = status.reports.get(a);
+        if(r.reportLevel == ReportLevel.ERROR)
+          errors.add(subsystem.getName() + " - " + r.toString());
         subsystem.Log(r.toString());
       }
     }
 
     
     // CAN header
-    System.out.println(new String(Base64.getDecoder().decode("ICAgX19fICAgXyAgICAgICAgX18gCiAgLyBfX1wgL19cICAgIC9cIFwgXAogLyAvICAgLy9fXFwgIC8gIFwvIC8KLyAvX19fLyAgXyAgXC8gL1wgIC8gIApcX19fXy9cXy8gXF8vXF9cIFwvICh0KQ==")));
+    System.out.println(new String(Base64.getDecoder().decode("IOKWl+KWhOKWhOKWliDilpfiloTilpYg4paX4paWICDilpfilpYK4paQ4paMICAg4paQ4paMIOKWkOKWjOKWkOKWm+KWmuKWluKWkOKWjArilpDilowgICDilpDilpviloDilpzilozilpDilowg4pad4pac4paMCuKWneKWmuKWhOKWhOKWluKWkOKWjCDilpDilozilpDilowgIOKWkOKWjCh0KQ==")));
     
 
     for(int i=0;i<CanDevice.devices.size();i++){
@@ -165,10 +171,21 @@ public class Robot extends TimedRobot {
 
       for(int a=0;a<status.reports.size();a++){
         Report r = status.reports.get(a);
+        if(r.reportLevel == ReportLevel.ERROR)
+          errors.add(device.getName() + " - " + r.toString());
         device.Log(r.toString());
       }
     }
 
     System.out.println("Found CAN devices: " + new DeviceFinder().Find());
+    
+    if(errors.size() > 0) {
+      // Errors header
+      System.out.println(new String(Base64.getDecoder().decode("4paX4paE4paE4paE4paW4paX4paE4paE4paWIOKWl+KWhOKWhOKWliAg4paX4paE4paWIOKWl+KWhOKWhOKWliAg4paX4paE4paE4paWCuKWkOKWjCAgIOKWkOKWjCDilpDilozilpDilowg4paQ4paM4paQ4paMIOKWkOKWjOKWkOKWjCDilpDilozilpDilowgICAK4paQ4pab4paA4paA4paY4paQ4pab4paA4paa4paW4paQ4pab4paA4paa4paW4paQ4paMIOKWkOKWjOKWkOKWm+KWgOKWmuKWliDilp3iloDilprilpYK4paQ4paZ4paE4paE4paW4paQ4paMIOKWkOKWjOKWkOKWjCDilpDilozilp3ilpriloTilp7ilpjilpDilowg4paQ4paM4paX4paE4paE4pae4paY")));
+      for(int i=0;i<errors.size(); i++){
+        System.out.println(errors.get(0));
+      }
+    }
+
   }
 }
