@@ -7,7 +7,11 @@
 
 package frc4388.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc4388.utility.CanDevice;
 import frc4388.utility.Gains;
 import frc4388.utility.LEDPatterns;
 
@@ -40,6 +44,8 @@ public final class Constants {
         public static final double FAST_SPEED = 0.5;
         public static final double TURBO_SPEED = 1.0;
     
+        // public static List<CanDevice> CAN_DEVICES = new ArrayList<>();
+
         public static final class DefaultSwerveRotOffsets {
           public static final double FRONT_LEFT_ROT_OFFSET  = 0.0; //TODO: per robot swerve module offsets.
           public static final double FRONT_RIGHT_ROT_OFFSET = 0.0; //TODO: per robot swerve module offsets.
@@ -48,23 +54,24 @@ public final class Constants {
         }
 
         public static final class IDs {
-            public static final int RIGHT_FRONT_WHEEL_ID = 2;
-            public static final int RIGHT_FRONT_STEER_ID = 3;
-            public static final int RIGHT_FRONT_ENCODER_ID = 10;
+            public static final CanDevice RIGHT_FRONT_WHEEL   = new CanDevice("RIGHT_FRONT_WHEEL", 2);
+            public static final CanDevice RIGHT_FRONT_STEER   = new CanDevice("RIGHT_FRONT_STEER", 3);
+            public static final CanDevice RIGHT_FRONT_ENCODER = new CanDevice("RIGHT_FRONT_ENCODER", 10);
             
-            public static final int LEFT_FRONT_WHEEL_ID = 4;
-            public static final int LEFT_FRONT_STEER_ID = 5;
-            public static final int LEFT_FRONT_ENCODER_ID = 11;
+            public static final CanDevice LEFT_FRONT_WHEEL    = new CanDevice("LEFT_FRONT_WHEEL", 4);
+            public static final CanDevice LEFT_FRONT_STEER    = new CanDevice("LEFT_FRONT_STEER", 5);
+            public static final CanDevice LEFT_FRONT_ENCODER  = new CanDevice("LEFT_FRONT_ENCODER", 11);
             
-            public static final int LEFT_BACK_WHEEL_ID = 6;
-            public static final int LEFT_BACK_STEER_ID = 7;
-            public static final int LEFT_BACK_ENCODER_ID = 12;
+            public static final CanDevice LEFT_BACK_WHEEL     = new CanDevice("LEFT_BACK_WHEEL", 6);
+            public static final CanDevice LEFT_BACK_STEER     = new CanDevice("LEFT_BACK_STEER", 7);
+            public static final CanDevice LEFT_BACK_ENCODER   = new CanDevice("LEFT_BACK_ENCODER", 12);
             
-            public static final int RIGHT_BACK_WHEEL_ID = 8;  
-            public static final int RIGHT_BACK_STEER_ID = 9;
-            public static final int RIGHT_BACK_ENCODER_ID = 13;
+            public static final CanDevice RIGHT_BACK_WHEEL    = new CanDevice("RIGHT_BACK_WHEEL", 8);  
+            public static final CanDevice RIGHT_BACK_STEER    = new CanDevice("RIGHT_BACK_STEER", 9);
+            public static final CanDevice RIGHT_BACK_ENCODER  = new CanDevice("RIGHT_BACK_ENCODER", 13);
 
-            public static final int DRIVE_PIGEON_ID = 14;
+            public static final CanDevice DRIVE_PIGEON        = new CanDevice("DRIVE_PIGEON", 4);
+            public static final CanDevice e        = new CanDevice("NONEXISTANT_CAN", 50);
         }
     
         public static final class PIDConstants {

@@ -7,16 +7,19 @@
 
 package frc4388.robot;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc4388.utility.CanDevice;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.RobotTime;
 import frc4388.utility.Status;
 import frc4388.utility.Subsystem;
+import frc4388.utility.DeviceFinder;
 import frc4388.utility.Status.Report;
 //import frc4388.robot.subsystems.LED;
 /**
@@ -133,16 +136,39 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+
+    // Subsystems header
+    System.out.println(new String(Base64.getDecoder().decode("IF9fICAgICAgIF8gICAgICAgICAgICAgICAgICAgXyAgICAgICAgICAgICAgICAgICAgIAovIF9cXyAgIF98IHxfXyAgX19fIF8gICBfIF9fX3wgfF8gX19fIF8gX18gX19fICBfX18gClwgXHwgfCB8IHwgJ18gXC8gX198IHwgfCAvIF9ffCBfXy8gXyBcICdfIGAgXyBcLyBfX3wKX1wgXCB8X3wgfCB8XykgXF9fIFwgfF98IFxfXyBcIHx8ICBfXy8gfCB8IHwgfCBcX18gXApcX18vXF9fLF98XyBfXy98X19fL1xfXywgfF9fXy9cX19cX19ffF98IHxffCB8X3xfX18vCiAgICAgICAgICAgICAgICAgICAgfF9fXy8gICAgICAgICAgICAgICAgICAgICAgICAgICA=")));
+
     for(int i=0;i<m_robotContainer.subsystems.size();i++){
 
       Subsystem subsystem = m_robotContainer.subsystems.get(i);
-      subsystem.Log("Subsystem diagnostic report for " + subsystem.getName() + ":");
+      System.out.println("** Subsystem diagnostic report for " + subsystem.getName() + ":");
       Status status = subsystem.diagnosticStatus();
 
       for(int a=0;a<status.reports.size();a++){
-        Report r = status.reports.get(i);
+        Report r = status.reports.get(a);
         subsystem.Log(r.toString());
       }
     }
+
+    
+    // CAN header
+    System.out.println(new String(Base64.getDecoder().decode("ICAgX19fICAgXyAgICAgICAgX18gCiAgLyBfX1wgL19cICAgIC9cIFwgXAogLyAvICAgLy9fXFwgIC8gIFwvIC8KLyAvX19fLyAgXyAgXC8gL1wgIC8gIApcX19fXy9cXy8gXF8vXF9cIFwvICh0KQ==")));
+    
+
+    for(int i=0;i<CanDevice.devices.size();i++){
+
+      CanDevice device = CanDevice.devices.get(i);
+      System.out.println("** CAN diagnostic report for " + device.name + ":");
+      Status status = device.diagnosticStatus();
+
+      for(int a=0;a<status.reports.size();a++){
+        Report r = status.reports.get(a);
+        device.Log(r.toString());
+      }
+    }
+
+    System.out.println("Found CAN devices: " + new DeviceFinder().Find());
   }
 }
