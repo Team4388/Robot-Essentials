@@ -24,6 +24,8 @@ import frc4388.utility.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final String CANBUS_NAME = "rio";
+    
     public static final class SwerveDriveConstants {
 
         public static final double MAX_ROT_SPEED        = 3.5;
@@ -33,8 +35,6 @@ public final class Constants {
         public static       double PLAYBACK_ROTATION_SPEED = AUTO_MAX_ROT_SPEED;
         public static       double ROT_CORRECTION_SPEED = 10; // MIN_ROT_SPEED;
 
-        public static final String CANBUS_NAME = "IDK";
-    
         public static final double CORRECTION_MIN = 10;
         public static final double CORRECTION_MAX = 50;
         

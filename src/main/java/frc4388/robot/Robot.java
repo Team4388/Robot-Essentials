@@ -12,6 +12,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.CANBus.CANBusStatus;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,7 +23,6 @@ import frc4388.utility.DeferredBlock;
 import frc4388.utility.RobotTime;
 import frc4388.utility.Status;
 import frc4388.utility.Subsystem;
-import frc4388.utility.DeviceFinder;
 import frc4388.utility.Status.Report;
 import frc4388.utility.Status.ReportLevel;
 //import frc4388.robot.subsystems.LED;
@@ -162,6 +164,20 @@ public class Robot extends TimedRobot {
     // CAN header
     System.out.println(new String(Base64.getDecoder().decode("IOKWl+KWhOKWhOKWliDilpfiloTilpYg4paX4paWICDilpfilpYK4paQ4paMICAg4paQ4paMIOKWkOKWjOKWkOKWm+KWmuKWluKWkOKWjArilpDilowgICDilpDilpviloDilpzilozilpDilowg4pad4pac4paMCuKWneKWmuKWhOKWhOKWluKWkOKWjCDilpDilozilpDilowgIOKWkOKWjCh0KQ==")));
     
+    CANBusStatus canInfo = CANBus.getStatus(Constants.CANBUS_NAME);
+    
+    System.out.println("CANInfo BusOffCount     - " + canInfo.BusOffCount);
+    System.out.println("CANInfo BusUtilization  - " + canInfo.BusUtilization);
+    System.out.println("CANInfo RX Errors count - " + canInfo.REC);
+    System.out.println("CANInfo TX Errors count - " + canInfo.TEC);
+    System.out.println("CANInfo Transmit buffer full count - " + canInfo.TxFullCount);
+    // Broken turniary operator
+    ReportLevel canReportLevel = canInfo.Status.isOK() ? (canInfo.Status.isWarning() ? ReportLevel.WARNING : ReportLevel.ERROR) : ReportLevel.INFO;
+    String canStatus = "CAN " + canReportLevel.name() + " - " + canInfo.Status.getName() + " (" + canInfo.Status.getDescription() + ")";
+    if(canReportLevel == ReportLevel.ERROR) {
+      errors.add(canStatus);
+    }
+    System.out.println(canStatus);
 
     for(int i=0;i<CanDevice.devices.size();i++){
 
@@ -177,7 +193,7 @@ public class Robot extends TimedRobot {
       }
     }
 
-    System.out.println("Found CAN devices: " + new DeviceFinder().Find());
+    // System.out.println("Found CAN devices: " + new DeviceFinder().Find());
     
     if(errors.size() > 0) {
       // Errors header
