@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems;
 
+import java.util.logging.Level;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -14,12 +16,14 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MagnetHealthValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -29,12 +33,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
+import frc4388.utility.Status;
+import frc4388.utility.Subsystem;
+import frc4388.utility.Status.ReportLevel;
 
-public class SwerveModule extends SubsystemBase {
+public class SwerveModule extends Subsystem {
+    private String name = "Null";
     private TalonFX driveMotor;
     private TalonFX angleMotor;
     private CANcoder encoder;
@@ -47,7 +56,9 @@ public class SwerveModule extends SubsystemBase {
   
     
     /** Creates a new SwerveModule. */
-    public SwerveModule(TalonFX driveMotor, TalonFX angleMotor, CANcoder encoder, double offset) {
+    public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANcoder encoder, double offset) {
+        super();
+        this.name = name;
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
@@ -150,7 +161,7 @@ public class SwerveModule extends SubsystemBase {
     public Rotation2d getAngle() {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         // return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
-        return Rotation2d.fromRotations(encoder.getPosition().getValue());
+        return Rotation2d.fromRotations(encoder.getPosition().getValue().baseUnitMagnitude());
     }
     
     public double getAngularVel() {
@@ -184,8 +195,8 @@ public class SwerveModule extends SubsystemBase {
      */
     public SwerveModuleState getState() {
         return new SwerveModuleState(
-            Units.inchesToMeters(driveMotor.getVelocity().getValue() * 
-            SwerveDriveConstants.Conversions.INCHES_PER_WHEEL_REV * 
+            Units.inchesToMeters(driveMotor.getVelocity().getValue().baseUnitMagnitude() *
+            SwerveDriveConstants.Conversions.INCHES_PER_WHEEL_REV *
             SwerveDriveConstants.Conversions.WHEEL_REV_PER_MOTOR_REV), 
             getAngle()
         );
@@ -208,10 +219,10 @@ public class SwerveModule extends SubsystemBase {
      * Set the speed and rotation of the SwerveModule from a SwerveModuleState object
      * @param desiredState a SwerveModuleState representing the desired new state of the module
     //  */
-    public void setDesiredState(SwerveModuleState desiredState) {
+    public void setDesiredState(SwerveModuleState state) {
         Rotation2d currentRotation = this.getAngle();
 
-        SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
+        state.optimize(currentRotation);//SwerveModuleState.optimize(desiredState, currentRotation);
 
         // calculate the difference between our current rotational position and our new rotational position
         Rotation2d rotationDelta = state.angle.minus(currentRotation);
@@ -225,6 +236,33 @@ public class SwerveModule extends SubsystemBase {
 
     public void reset() {
         // encoder.setPosition(0);
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return this.name;
+    }
+
+    @Override
+    public void queryStatus() {
+        SmartDashboard.putNumber("[" + getSubsystemName() + "] Drive motor speed", this.driveMotor.get());
+        SmartDashboard.putNumber("[" + getSubsystemName() + "] Angle motor angle", this.angleMotor.getRotorPosition().getValueAsDouble());
+        //TODO: Add more status things
+    }
+
+    public boolean motorsAlive() {
+        return this.driveMotor.isAlive() && this.angleMotor.isAlive();
+    }
+
+    @Override
+    public Status diagnosticStatus() {
+        Status status = new Status();
+        
+        status.diagnoseHardwareCTRE("Drive", this.driveMotor);
+        status.diagnoseHardwareCTRE("Angle", this.angleMotor);
+        status.diagnoseHardwareCTRE("Steer", this.encoder);
+        
+        return status;
     }
 
     // public double getCurrent() {

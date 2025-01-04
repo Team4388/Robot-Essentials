@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems;
 
+import java.util.logging.Level;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,8 +19,12 @@ import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.Constants.SwerveDriveConstants.Conversions;
 import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotUnits;
+import frc4388.utility.Status;
+import frc4388.utility.Subsystem;
+import frc4388.utility.Status.Report;
+import frc4388.utility.Status.ReportLevel;
 
-public class  SwerveDrive extends SubsystemBase {
+public class SwerveDrive extends Subsystem {
   
   private SwerveModule leftFront;
   private SwerveModule rightFront;
@@ -49,6 +55,7 @@ public class  SwerveDrive extends SubsystemBase {
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
+    super();
     this.leftFront = leftFront;
     this.rightFront = rightFront;
     this.leftBack = leftBack;
@@ -285,29 +292,23 @@ public class  SwerveDrive extends SubsystemBase {
 
   public void setToSlow() {
     this.speedAdjust = Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST * SwerveDriveConstants.SLOW_SPEED;
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
+    for(int i=0;i<5;i++){
+      Log("SLOW");
+    }
   }
 
   public void setToFast() {
     this.speedAdjust = Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST * SwerveDriveConstants.FAST_SPEED;
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
+    for(int i=0;i<5;i++){
+      Log("FAST");
+    }
   }
 
   public void setToTurbo() {
     this.speedAdjust = Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST * SwerveDriveConstants.TURBO_SPEED;
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
+        for(int i=0;i<5;i++){
+      Log("TURBO");
+    }
   }
 
   public void toggleGear(double angle) {
@@ -328,6 +329,36 @@ public class  SwerveDrive extends SubsystemBase {
     rotSpeedAdjust = SwerveDriveConstants.MIN_ROT_SPEED;
   }
 
-  
+  @Override
+  public String getSubsystemName() {
+    return "Swerve Drive Controller";
+  }
 
+  @Override
+  public void queryStatus() {
+
+    SmartDashboard.putNumber("[" + getSubsystemName() + "] Gyro angle", this.gyro.getAngle());
+    SmartDashboard.putNumber("[" + getSubsystemName() + "] Shift State", this.speedAdjust);
+
+    // this.leftFront.queryStatus();
+    // this.leftBack.queryStatus();
+    // this.rightFront.queryStatus();
+    // this.rightBack.queryStatus();
+  
+    //TODO: Add more status things
+  }
+
+  @Override
+  public Status diagnosticStatus() {
+    Status status = new Status();
+    for (SwerveModule module : modules) {
+      for (Report moduleDignostic : module.diagnosticStatus().reports) {
+        status.addReport(moduleDignostic.reportLevel, "[" + module.getSubsystemName() + "] " + moduleDignostic.description);
+      }
+    }
+
+    status.diagnoseHardwareCTRE("Swerve Gyro", gyro.getPigeon());
+    
+    return status;
+  }
 }

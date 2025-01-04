@@ -9,6 +9,10 @@ package frc4388.robot;
 
 // Drive Systems
 import edu.wpi.first.wpilibj.DriverStation;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import frc4388.utility.controller.XboxController;
@@ -33,6 +37,7 @@ import frc4388.robot.subsystems.SwerveDrive;
 
 // Utilites
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.Subsystem;
 import frc4388.utility.configurable.ConfigurableString;
 
 /**
@@ -65,6 +70,8 @@ public class RobotContainer {
     private final VirtualController m_virtualDriver = new VirtualController(0);
     private final VirtualController m_virtualOperator = new VirtualController(1);
 
+    // public List<Subsystem> subsystems = new ArrayList<>();
+
     // ! Teleop Commands
 
     // ! /*  Autos */
@@ -95,6 +102,12 @@ public class RobotContainer {
         }, m_robotSwerveDrive)
         .withName("SwerveDrive DefaultCommand"));
         m_robotSwerveDrive.setToSlow();
+
+        // this.subsystems.add(m_robotSwerveDrive);
+        // this.subsystems.add(m_robotMap.leftFront);
+        // this.subsystems.add(m_robotMap.rightFront);
+        // this.subsystems.add(m_robotMap.rightBack);
+        // this.subsystems.add(m_robotMap.leftBack);
 
         // ! Swerve Drive One Module Test
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
