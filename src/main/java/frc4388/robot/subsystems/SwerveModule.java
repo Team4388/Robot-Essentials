@@ -33,6 +33,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
@@ -56,6 +57,7 @@ public class SwerveModule extends Subsystem {
     
     /** Creates a new SwerveModule. */
     public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, CANcoder encoder, double offset) {
+        super();
         this.name = name;
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
@@ -242,15 +244,10 @@ public class SwerveModule extends Subsystem {
     }
 
     @Override
-    public Status queryStatus() {
-        Status status = new Status();
-        
-        status.addReport(ReportLevel.INFO, "Drive motor speed: " + this.driveMotor.get());
-        status.addReport(ReportLevel.INFO, "Angle motor speed: " + this.angleMotor.get());
+    public void queryStatus() {
+        SmartDashboard.putNumber("[" + getSubsystemName() + "] Drive motor speed", this.driveMotor.get());
+        SmartDashboard.putNumber("[" + getSubsystemName() + "] Angle motor angle", this.angleMotor.getRotorPosition().getValueAsDouble());
         //TODO: Add more status things
-
-
-        return status;
     }
 
     public boolean motorsAlive() {

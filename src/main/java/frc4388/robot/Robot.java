@@ -15,7 +15,9 @@ import java.util.logging.Level;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.CanDevice;
@@ -49,6 +51,26 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+
+
+    new Thread() {
+      public void run() {
+        try{
+        while(!this.isInterrupted() && this.isAlive()){
+          Thread.sleep(500);
+          for(int i=0;i<Subsystem.subsystems.size(); i++){
+            Subsystem.subsystems.get(i).queryStatus();
+          }
+
+          System.out.println("Updated statuses!");
+          
+        }
+        }catch(Exception e){
+          e.printStackTrace();
+        }
+      }
+    }.start();
   }
 
   /**
@@ -146,9 +168,9 @@ public class Robot extends TimedRobot {
     // Subsystems header
     System.out.println(new String(Base64.getDecoder().decode("IOKWl+KWhOKWhOKWluKWl+KWliDilpfilpbilpfiloTiloTilpYgIOKWl+KWhOKWhOKWluKWl+KWliAg4paX4paW4paX4paE4paE4paW4paX4paE4paE4paE4paW4paX4paE4paE4paE4paW4paX4paWICDilpfilpYg4paX4paE4paE4paWCuKWkOKWjCAgIOKWkOKWjCDilpDilozilpDilowg4paQ4paM4paQ4paMICAgIOKWneKWmuKWnuKWmOKWkOKWjCAgICAg4paIICDilpDilowgICDilpDilpvilprilp7ilpzilozilpDilowgICAKIOKWneKWgOKWmuKWluKWkOKWjCDilpDilozilpDilpviloDilprilpYg4pad4paA4paa4paWICDilpDilowgIOKWneKWgOKWmuKWliAg4paIICDilpDilpviloDiloDilpjilpDilowgIOKWkOKWjCDilp3iloDilprilpYK4paX4paE4paE4pae4paY4pad4paa4paE4pae4paY4paQ4paZ4paE4pae4paY4paX4paE4paE4pae4paYICDilpDilowg4paX4paE4paE4pae4paYICDiloggIOKWkOKWmeKWhOKWhOKWluKWkOKWjCAg4paQ4paM4paX4paE4paE4pae4paY")));
 
-    for(int i=0;i<m_robotContainer.subsystems.size();i++){
+    for(int i=0;i< Subsystem.subsystems.size();i++){
 
-      Subsystem subsystem = m_robotContainer.subsystems.get(i);
+      Subsystem subsystem = Subsystem.subsystems.get(i);
       System.out.println("** Subsystem diagnostic report for " + subsystem.getName() + ":");
       Status status = subsystem.diagnosticStatus();
 

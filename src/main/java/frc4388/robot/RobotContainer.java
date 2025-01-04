@@ -70,7 +70,7 @@ public class RobotContainer {
     private final VirtualController m_virtualDriver = new VirtualController(0);
     private final VirtualController m_virtualOperator = new VirtualController(1);
 
-    public List<Subsystem> subsystems = new ArrayList<>();
+    // public List<Subsystem> subsystems = new ArrayList<>();
 
     // ! Teleop Commands
 
@@ -103,11 +103,11 @@ public class RobotContainer {
         .withName("SwerveDrive DefaultCommand"));
         m_robotSwerveDrive.setToSlow();
 
-        this.subsystems.add(m_robotSwerveDrive);
-        this.subsystems.add(m_robotMap.leftFront);
-        this.subsystems.add(m_robotMap.rightFront);
-        this.subsystems.add(m_robotMap.rightBack);
-        this.subsystems.add(m_robotMap.leftBack);
+        // this.subsystems.add(m_robotSwerveDrive);
+        // this.subsystems.add(m_robotMap.leftFront);
+        // this.subsystems.add(m_robotMap.rightFront);
+        // this.subsystems.add(m_robotMap.rightBack);
+        // this.subsystems.add(m_robotMap.leftBack);
 
         // ! Swerve Drive One Module Test
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
