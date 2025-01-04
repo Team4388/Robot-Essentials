@@ -181,7 +181,7 @@ public class RobotGyro {
 	 *					Roll is within [-90,+90] degrees.
      */
     private double[] getPigeonAngles() {
-        m_pigeon.getAngle();
+        //m_pigeon.getAngle(); // This appeared to not do anything?
         var rotation = m_pigeon.getRotation3d();
 
         return new double[] {RobotUnits.radiansToDegrees(rotation.getX() - rollZero), RobotUnits.radiansToDegrees(rotation.getY() - pitchZero), RobotUnits.radiansToDegrees(rotation.getZ())};

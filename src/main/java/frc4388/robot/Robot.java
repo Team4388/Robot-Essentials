@@ -164,7 +164,9 @@ public class Robot extends TimedRobot {
     // CAN header
     System.out.println(new String(Base64.getDecoder().decode("IOKWl+KWhOKWhOKWliDilpfiloTilpYg4paX4paWICDilpfilpYK4paQ4paMICAg4paQ4paMIOKWkOKWjOKWkOKWm+KWmuKWluKWkOKWjArilpDilowgICDilpDilpviloDilpzilozilpDilowg4pad4pac4paMCuKWneKWmuKWhOKWhOKWluKWkOKWjCDilpDilozilpDilowgIOKWkOKWjCh0KQ==")));
     
-    CANBusStatus canInfo = CANBus.getStatus(Constants.CANBUS_NAME);
+    CANBus canBus = new CANBus(Constants.CANBUS_NAME);
+    
+    CANBusStatus canInfo = canBus.getStatus();
     
     System.out.println("CANInfo BusOffCount     - " + canInfo.BusOffCount);
     System.out.println("CANInfo BusUtilization  - " + canInfo.BusUtilization);

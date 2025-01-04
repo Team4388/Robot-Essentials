@@ -217,10 +217,10 @@ public class SwerveModule extends Subsystem {
      * Set the speed and rotation of the SwerveModule from a SwerveModuleState object
      * @param desiredState a SwerveModuleState representing the desired new state of the module
     //  */
-    public void setDesiredState(SwerveModuleState desiredState) {
+    public void setDesiredState(SwerveModuleState state) {
         Rotation2d currentRotation = this.getAngle();
 
-        SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
+        state.optimize(currentRotation);//SwerveModuleState.optimize(desiredState, currentRotation);
 
         // calculate the difference between our current rotational position and our new rotational position
         Rotation2d rotationDelta = state.angle.minus(currentRotation);
