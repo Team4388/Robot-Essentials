@@ -44,6 +44,8 @@ public class DiffDrive extends Subsystem {
    */
   public DiffDrive(TalonFX leftFrontMotor, TalonFX rightFrontMotor, TalonFX leftBackMotor,
       TalonFX rightBackMotor, DifferentialDrive driveTrain, RobotGyro gyro) {
+    
+        super();
 
     m_leftFrontMotor = leftFrontMotor;
     m_rightFrontMotor = rightFrontMotor;
@@ -98,10 +100,8 @@ public class DiffDrive extends Subsystem {
   }
 
   @Override
-  public Status queryStatus() {
-      Status status = new Status();
+  public void queryStatus() {
       // TODO: Add Stuff
-      return status;
   }
 
   @Override

@@ -55,6 +55,7 @@ public class SwerveDrive extends Subsystem {
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
+    super();
     this.leftFront = leftFront;
     this.rightFront = rightFront;
     this.leftBack = leftBack;
@@ -334,14 +335,17 @@ public class SwerveDrive extends Subsystem {
   }
 
   @Override
-  public Status queryStatus() {
-    Status status = new Status();
-    
-    status.addReport(ReportLevel.INFO, "Gyro Angle: " + this.gyro.getAngle());
-    status.addReport(ReportLevel.INFO, "Shift State: " + this.speedAdjust);
+  public void queryStatus() {
+
+    SmartDashboard.putNumber("[" + getSubsystemName() + "] Gyro angle", this.gyro.getAngle());
+    SmartDashboard.putNumber("[" + getSubsystemName() + "] Shift State", this.speedAdjust);
+
+    // this.leftFront.queryStatus();
+    // this.leftBack.queryStatus();
+    // this.rightFront.queryStatus();
+    // this.rightBack.queryStatus();
+  
     //TODO: Add more status things
-    
-    return status;
   }
 
   @Override
