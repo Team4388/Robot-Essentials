@@ -199,7 +199,7 @@ public class Robot extends TimedRobot {
       // Errors header
       System.out.println(new String(Base64.getDecoder().decode("4paX4paE4paE4paE4paW4paX4paE4paE4paWIOKWl+KWhOKWhOKWliAg4paX4paE4paWIOKWl+KWhOKWhOKWliAg4paX4paE4paE4paWCuKWkOKWjCAgIOKWkOKWjCDilpDilozilpDilowg4paQ4paM4paQ4paMIOKWkOKWjOKWkOKWjCDilpDilozilpDilowgICAK4paQ4pab4paA4paA4paY4paQ4pab4paA4paa4paW4paQ4pab4paA4paa4paW4paQ4paMIOKWkOKWjOKWkOKWm+KWgOKWmuKWliDilp3iloDilprilpYK4paQ4paZ4paE4paE4paW4paQ4paMIOKWkOKWjOKWkOKWjCDilpDilozilp3ilpriloTilp7ilpjilpDilowg4paQ4paM4paX4paE4paE4pae4paY")));
       for(int i=0;i<errors.size(); i++){
-        System.out.println(errors.get(0));
+        System.out.println(errors.get(i));
       }
     }
 
