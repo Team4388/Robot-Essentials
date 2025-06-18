@@ -35,13 +35,13 @@ public class CanDevice {
         System.out.println(getName() + " - " + str);
     }
 
-    public Status queryStatus() {
-         Status s = new Status();
+    // public Status queryStatus() {
+    //      Status s = new Status();
 
-        s.addReport(ReportLevel.INFO, "TODO");
+    //     s.addReport(ReportLevel.INFO, "TODO");
 
-        return s;
-    }
+    //     return s;
+    // }
 
     public Status diagnosticStatus() {
         Status s = new Status();

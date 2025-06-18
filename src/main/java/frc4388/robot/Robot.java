@@ -10,21 +10,23 @@ package frc4388.robot;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.logging.Level;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.CanDevice;
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.DeferredBlockMulti;
 import frc4388.utility.RobotTime;
 import frc4388.utility.Status;
 import frc4388.utility.Subsystem;
+import frc4388.utility.Trim;
 import frc4388.utility.Status.Report;
 import frc4388.utility.Status.ReportLevel;
 //import frc4388.robot.subsystems.LED;
@@ -63,7 +65,7 @@ public class Robot extends TimedRobot {
             Subsystem.subsystems.get(i).queryStatus();
           }
 
-          System.out.println("Updated statuses!");
+          // System.out.println("Updated statuses!");
           
         }
         }catch(Exception e){
@@ -84,8 +86,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {   
     m_robotTime.updateTimes();
-    //System.out.println(m_robotContainer.limelight.isNearSpeaker());
-    //mled.updateLED();
+    // SmartDashboard.putNumber("Time", System.currentTimeMillis());
+    
+    m_robotContainer.m_robotLED.update();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -110,6 +113,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledExit() {
     DeferredBlock.execute();
+    DeferredBlockMulti.execute();
   }
 
   /**
@@ -142,12 +146,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.stop();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+
     if (m_autonomousCommand != null) {
+      CommandScheduler.getInstance().cancel(m_autonomousCommand);
       m_autonomousCommand.cancel();
+      m_autonomousCommand.end(true);
+      System.out.println("NOT Null!!");
+
+    } else {
+      System.out.println("Null!!");
     }
     m_robotTime.startMatchTime();
   }
@@ -158,6 +170,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   //  m_robotContainer.m_robotMap.rightFront.go(m_robotContainer.getDeadbandedDriverController().getLeft());
+  }
+
+  /**
+   * This function is called periodically during operator control.
+   */
+  @Override
+  public void teleopExit() { // the only OTHER mode that teleop can enter into is disabled.
+    Trim.dumpAll();
   }
 
   @Override

@@ -9,82 +9,67 @@ package frc4388.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.utility.LEDPatterns;
+import frc4388.utility.Status;
+import frc4388.utility.Subsystem;
+import frc4388.utility.Status.ReportLevel;
 
 /**
  * Allows for the control of a 5v LED Strip using a Rev Robotics Blinkin LED
  * Driver
  */
-public class LED extends SubsystemBase {
+public class LED extends Subsystem {
 
-  static AddressableLED m_led;
-  static AddressableLEDBuffer m_ledBuffer;
-  static LED m_self;
-  /**
-   * Add your docs here.
-   */
+  private static Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
+  private LEDPatterns mode = LEDConstants.DEFAULT_PATTERN;
 
-  public LED(){
-    if(m_self != null)
-      return;
-    m_led = new AddressableLED(9);
-    m_ledBuffer = new AddressableLEDBuffer(10);
-    m_led.setLength(m_ledBuffer.getLength());
-    m_led.setData(m_ledBuffer);
-    m_led.start();
-    System.err.println("In the Beginning, there was Joe.\nAnd he said, 'Let there be LEDs.'\nAnd it was good.");
+  public void setMode(LEDPatterns pattern){
+    this.mode = pattern;
   }
-  public static LED getInstance() {
-    if(m_self == null)
-      m_self = new LED();
-    return m_self;
-  }
+
   @Override
-  public void periodic(){
-    //gamermode();
-    //SmartDashboard.putNumber("LED", m_currentPattern.getValue());
-    return;
-  }
-  static int firstcolor = 0;
-  static void gamermode() {
-      for(int i = 0; i < m_ledBuffer.getLength(); i++) {
-          final int hue = (firstcolor + (i * 180 / m_ledBuffer.getLength())) % 180;
-          setLEDHSV(i, hue, 255, 128);
-      }
-      firstcolor +=3;
-      firstcolor %= 180;
-  }
-  /**
-   * Add your docs here.
-   */
-  public static void updateLED (){
-    gamermode();
-   // m_LEDController.set(m_currentPattern.getValue());
+  public void periodic() {
+    update();
   }
 
-  /**
-   * Add your docs here.
-   */
-  public static void setLEDRGB(int lednum, int r, int g, int b){
-    m_ledBuffer.setRGB(lednum, r, g, b);
-    //m_currentPattern = pattern;
-   // m_LEDController.set(m_currentPattern.getValue());
+  public void update() {
+    if(!LEDController.isAlive() || LEDController.isSafetyEnabled()) return;
+
+    if(DriverStation.isDisabled()){
+      LEDController.set(LEDConstants.DEFAULT_PATTERN.getValue());
+    }else
+      LEDController.set(mode.getValue());
   }
-  public static void setLEDHSV(int lednum, int hue, int sat, int val){
-    m_ledBuffer.setRGB(lednum, hue, sat, val);
-    //m_currentPattern = pattern;
-   // m_LEDController.set(m_currentPattern.getValue());
+
+  @Override
+  public String getSubsystemName() {
+    return "LEDs";
   }
-  /**
-   * Add your docs here.
-   * @return
-   */
-  public AddressableLEDBuffer getBuffer() {
-    return m_ledBuffer;
+
+  @Override
+  public void queryStatus() {
+    SmartDashboard.putString("LED status", mode.name());
   }
+
+  @Override
+  public Status diagnosticStatus() {
+    Status status = new Status();
+
+    if(LEDController.isAlive())
+      status.addReport(ReportLevel.INFO, "LED is CONNECTED");
+    else
+      status.addReport(ReportLevel.ERROR, "LED is DISCONNECTED");
+    
+    status.addReport(ReportLevel.INFO, "LED Mode: " + mode.name());
+
+    return status;
+  }
+  
+
 }

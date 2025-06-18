@@ -7,21 +7,17 @@
 
 package frc4388.robot.subsystems;
 
-import java.util.logging.Level;
-
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotTime;
 import frc4388.utility.Status;
 import frc4388.utility.Subsystem;
-import frc4388.utility.Status.ReportLevel;
 
 /**
  * Add your docs here.
