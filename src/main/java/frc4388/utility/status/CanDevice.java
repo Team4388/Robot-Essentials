@@ -1,13 +1,9 @@
-package frc4388.utility;
+package frc4388.utility.status;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.first.hal.CANData;
-import edu.wpi.first.hal.can.CANJNI;
-import edu.wpi.first.wpilibj.CAN;
-import frc4388.utility.Status.Report;
-import frc4388.utility.Status.ReportLevel;
+import frc4388.utility.status.Status.ReportLevel;
 
 public class CanDevice {
     public static List<CanDevice> devices = new ArrayList<>();
@@ -35,13 +31,13 @@ public class CanDevice {
         System.out.println(getName() + " - " + str);
     }
 
-    public Status queryStatus() {
-         Status s = new Status();
+    // public Status queryStatus() {
+    //      Status s = new Status();
 
-        s.addReport(ReportLevel.INFO, "TODO");
+    //     s.addReport(ReportLevel.INFO, "TODO");
 
-        return s;
-    }
+    //     return s;
+    // }
 
     public Status diagnosticStatus() {
         Status s = new Status();

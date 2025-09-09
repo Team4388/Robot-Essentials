@@ -1,4 +1,4 @@
-package frc4388.robot.commands.Swerve;
+package frc4388.robot.commands.swerve;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -6,11 +6,11 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.DataUtils;
-import frc4388.utility.UtilityStructs.AutoRecordingControllerFrame;
-import frc4388.utility.UtilityStructs.AutoRecordingFrame;
+import frc4388.robot.subsystems.swerve.SwerveDrive;
+import frc4388.utility.compute.DataUtils;
 import frc4388.utility.controller.VirtualController;
+import frc4388.utility.structs.UtilityStructs.AutoRecordingControllerFrame;
+import frc4388.utility.structs.UtilityStructs.AutoRecordingFrame;
 
 
 /**
@@ -24,8 +24,8 @@ public class neoJoystickPlayback extends Command {
     private final Supplier<String>              filenameGetter;
     private       String                        filename;
     private       int                           frame_index    = 0;
-    private       long                          startTime      = 0;
-    private       long                          playbackTime   = 0;
+    // private       long                          startTime      = 0;
+    // private       long                          playbackTime   = 0;
     private       boolean                       m_finished     = false; // ! There is no better way.
     private       boolean                       m_shouldfree   = false; // should free memory on ending
     
@@ -150,8 +150,8 @@ public class neoJoystickPlayback extends Command {
 
     @Override
     public void initialize() {
-        startTime = System.currentTimeMillis();
-        playbackTime = 0;
+        // startTime = System.currentTimeMillis();
+        // playbackTime = 0;
         frame_index = 0;
 
         m_finished = !loadAuto();

@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.utility;
+package frc4388.utility.compute;
 
 /**
  * <p>Keeps track of Robot times like time passed, delta time, etc
