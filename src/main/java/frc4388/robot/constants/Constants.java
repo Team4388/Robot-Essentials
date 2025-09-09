@@ -61,9 +61,7 @@ public final class Constants {
         public static final Trim X_OFFSET_TRIM =        new Trim("X Offset Trim",        Double.MAX_VALUE, -Double.MAX_VALUE,0.5, 0);
         // public static final Trim Y_OFFSET_TRIM =        new Trim("Y Offset Trim",        Double.MAX_VALUE, -Double.MAX_VALUE, 0.5, 1.5);
         public static final Trim Y_OFFSET_TRIM =        new Trim("Y Offset Trim",        Double.MAX_VALUE, -Double.MAX_VALUE, 0.5, 0);
-        public static final Trim ELEVATOR_OFFSET_TRIM = new Trim("Elevator Offset Trim", -ElevatorConstants.MAX_POSITION_ELEVATOR, ElevatorConstants.MAX_POSITION_ELEVATOR, 1, 0);
-        public static final Trim ARM_OFFSET_TRIM =      new Trim("ARM Offset Trim",      -ElevatorConstants.COMPLETLY_TOP_ENDEFFECTOR, ElevatorConstants.COMPLETLY_TOP_ENDEFFECTOR, 1, 0);
-                
+         
         public static final double XY_TOLERANCE = 0.07; // Meters
         public static final double ROT_TOLERANCE = 5; // Degrees
 
@@ -71,6 +69,7 @@ public final class Constants {
         public static final double MIN_ROT_PID_OUTPUT = 0.0;
 
         public static final double VELOCITY_THRESHHOLD = 0.01;
+    }
   
 
     public static final class VisionConstants { 
@@ -144,3 +143,4 @@ public final class Constants {
             REPLAY
         }
     }
+}
