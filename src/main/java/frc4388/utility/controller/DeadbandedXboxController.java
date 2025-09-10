@@ -1,6 +1,7 @@
+
 package frc4388.utility.controller;
 
-import static frc4388.robot.Constants.OIConstants.LEFT_AXIS_DEADBAND;
+import static frc4388.robot.constants.Constants.OIConstants.LEFT_AXIS_DEADBAND;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;

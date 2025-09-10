@@ -1,4 +1,4 @@
-package frc4388.utility;
+package frc4388.utility.compute;
 
 import java.nio.ByteBuffer;
 

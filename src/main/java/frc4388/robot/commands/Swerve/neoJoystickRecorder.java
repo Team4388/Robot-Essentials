@@ -1,4 +1,4 @@
-package frc4388.robot.commands.Swerve;
+package frc4388.robot.commands.swerve;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -7,11 +7,11 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.DataUtils;
-import frc4388.utility.UtilityStructs.AutoRecordingControllerFrame;
-import frc4388.utility.UtilityStructs.AutoRecordingFrame;
+import frc4388.robot.subsystems.swerve.SwerveDrive;
+import frc4388.utility.compute.DataUtils;
 import frc4388.utility.controller.DeadbandedXboxController;
+import frc4388.utility.structs.UtilityStructs.AutoRecordingControllerFrame;
+import frc4388.utility.structs.UtilityStructs.AutoRecordingFrame;
 
 /**
  * The NEO autonomus recording system, designed based the old {@link JoystickRecorder} System but with {@link frc4388.utility.controller.VirtualController VirtualController}s 

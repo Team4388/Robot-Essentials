@@ -1,4 +1,4 @@
-package frc4388.utility;
+package frc4388.utility.structs;
 
 public class UtilityStructs {
     public static class TimedOutput {

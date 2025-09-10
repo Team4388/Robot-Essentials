@@ -5,7 +5,7 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc4388.utility.Gains;
+import frc4388.utility.structs.Gains;
 
 public abstract class PID extends Command {
 	protected Gains  gains;
