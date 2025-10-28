@@ -102,6 +102,11 @@ public final class Constants {
 
     }
 
+     public static final class CalibrationConstants{
+        public static final double FIXED_DISTANCE_Y = 0;
+        public static final double FIXED_DISTANCE_X = 0;
+     }
+
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 9;
 
