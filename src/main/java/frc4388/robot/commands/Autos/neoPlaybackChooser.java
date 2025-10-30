@@ -1,4 +1,4 @@
-package frc4388.robot.commands.autos;
+package frc4388.robot.commands.Autos;
 // package frc4388.robot.commands.Autos;
 
 // import java.io.File;

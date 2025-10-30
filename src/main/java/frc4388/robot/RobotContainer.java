@@ -37,12 +37,6 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc4388.utility.controller.VirtualController;
 import frc4388.robot.commands.MoveForTimeCommand;
 import frc4388.robot.commands.MoveUntilSuply;
-import frc4388.robot.commands.alignment.DriveToReef;
-import frc4388.robot.commands.alignment.DriveUntilLiDAR;
-import frc4388.robot.commands.alignment.LidarAlign;
-import frc4388.robot.commands.wait.waitElevatorRefrence;
-import frc4388.robot.commands.wait.waitEndefectorRefrence;
-import frc4388.robot.commands.wait.waitFeedCoral;
 import frc4388.robot.commands.wait.waitSupplier;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.AutoConstants;
@@ -55,15 +49,12 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 // Subsystems
 import frc4388.robot.subsystems.LED;
-import frc4388.robot.subsystems.elevator.Elevator;
-import frc4388.robot.subsystems.elevator.Elevator.CoordinationState;
 import frc4388.robot.subsystems.lidar.LiDAR;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 // Utilites
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.compute.TimesNegativeOne;
-import frc4388.utility.compute.ReefPositionHelper.Side;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -80,13 +71,8 @@ public class RobotContainer {
     /* Subsystems */
     public final LED m_robotLED = new LED();
     public final Vision m_vision = new Vision(m_robotMap.leftCamera, m_robotMap.rightCamera);
-    public final Elevator m_robotElevator = new Elevator(m_robotMap.elevatorIO, m_robotLED);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
-
-    public final LiDAR reefLidar = new LiDAR(m_robotMap.reefLidar, "Reef");
-    public final LiDAR reverseLidar = new LiDAR(m_robotMap.reverseLidar, "Reverse");
-
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox   = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
