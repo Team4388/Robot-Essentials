@@ -69,6 +69,8 @@ public final class Constants {
         public static final double MIN_ROT_PID_OUTPUT = 0.0;
 
         public static final double VELOCITY_THRESHHOLD = 0.01;
+        public static final double X_SCORING_POSITION_OFFSET = 2;
+        public static final double STOP_VELOCITY = 2;
     }
   
 

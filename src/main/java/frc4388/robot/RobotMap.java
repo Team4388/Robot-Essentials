@@ -17,12 +17,9 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.LiDARConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.robot.constants.Constants.VisionConstants;
-import frc4388.robot.subsystems.elevator.ElevatorIO;
-import frc4388.robot.subsystems.elevator.ElevatorReal;
 import frc4388.robot.subsystems.lidar.LiDAR;
 import frc4388.robot.subsystems.lidar.LidarIO;
 import frc4388.robot.subsystems.lidar.LidarReal;
@@ -59,8 +56,6 @@ public class RobotMap {
     /* Swreve Drive Subsystem */
     public final SwerveIO swerveDrivetrain;
 
-    /* Elevator Subsystem */
-    public final ElevatorIO elevatorIO;
 
     public RobotMap(SimConstants.Mode mode) {
         switch (mode) {
@@ -88,25 +83,13 @@ public class RobotMap {
 
                 swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
-                // Configure elevator
-
-                TalonFX elevator = new TalonFX(ElevatorConstants.ELEVATOR_ID.id);
-                TalonFX endeffector = new TalonFX(ElevatorConstants.ENDEFFECTOR_ID.id);
-                
-
-                DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
-                DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
-                DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
-
-                elevatorIO = new ElevatorReal(elevator, endeffector, basinLimitSwitch, endeffectorLimitSwitch, IRIntakeBeam);
-
-
+               
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
-                FaultTalonFX.addDevice(elevator, "Elevator");
-                FaultTalonFX.addDevice(endeffector, "Endeffector");
+                //FaultTalonFX.addDevice(elevator, "Elevator");
+                //FaultTalonFX.addDevice(endeffector, "Endeffector");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
@@ -130,7 +113,6 @@ public class RobotMap {
                 reefLidar = new LidarIO() {};
                 reverseLidar = new LidarIO() {};
                 swerveDrivetrain = new SwerveIO() {};
-                elevatorIO = new ElevatorIO() {};
                 break;
         }
     }
