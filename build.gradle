@@ -74,8 +74,13 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
-    annotationProcessor "org.littletonrobotics.akit:akit-autolog:$akitJson.version"
+    def akitJsonFile = new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json")
+        if (akitJsonFile.exists() && akitJsonFile.text) {
+            def akitJson = new groovy.json.JsonSlurper().parseText(akitJsonFile.text)
+            annotationProcessor "org.littletonrobotics.akit:akit-autolog:$akitJson.version"
+        } else {
+            throw new GradleException("AdvantageKit.json file is missing or empty. Please ensure it exists in the vendordeps directory.")
+    }
 }
 
 test {

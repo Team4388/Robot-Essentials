@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.compute.TimesNegativeOne;
+import frc4388.utility.configurable.TunableNumber;
 import frc4388.utility.status.Status;
 import frc4388.utility.status.FaultReporter;
 import frc4388.utility.status.Queryable;
@@ -54,6 +55,9 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public double rotTarget = 0.0;
     public Rotation2d orientRotTarget = new Rotation2d();
     public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
+
+    private final TunableNumber xPosition = new TunableNumber("Robot Position", "X", 0.0);
+    private final TunableNumber yPosition = new TunableNumber("Robot Position", "Y", 0.0);
 
     /** Creates a new SwerveDrive. */
     public SwerveDrive(SwerveIO swerveDriveTrain, Vision vision) {
@@ -360,6 +364,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
             io.addVisionMeasurement(vision.getPosesToAdd());
         }
+
 
         // if(e.isPresent())
     }
