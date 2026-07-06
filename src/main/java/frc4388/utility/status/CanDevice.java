@@ -49,5 +49,10 @@ public class CanDevice {
         return s;
     }
 
+
+    public Object getId() {
+        return id;        
+    }
+
     
 }

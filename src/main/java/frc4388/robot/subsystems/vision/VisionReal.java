@@ -8,7 +8,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
-import frc4388.robot.constants.Constants.FieldConstants;
+import frc4388.robot.constants.FieldConstants;
 import frc4388.robot.constants.Constants.VisionConstants;
 
 public class VisionReal implements VisionIO {
@@ -45,11 +45,11 @@ public class VisionReal implements VisionIO {
         
         var result = results.get(results.size()-1);
 
-        state.isTagDetected = state.isTagDetected | result.hasTargets();
-
         // If there are no tags
         if(!result.hasTargets())
             return;
+
+        state.isTagDetected = result.hasTargets();
 
         Optional<EstimatedRobotPose> estimatedRobotPose = getEstimatedGlobalPose(result, estimator);
 

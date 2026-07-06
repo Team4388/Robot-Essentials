@@ -3,7 +3,6 @@ package frc4388.utility.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 import frc4388.robot.constants.Constants;
@@ -85,13 +84,12 @@ public class FaultReporter {
             }
         }
 
-        
         // CAN header
         System.out.println(CAN_HEADER);
 
-        CANBus canBus = new CANBus(Constants.CANBUS_NAME);
+        // CANBus canBus = new CANBus();
         
-        CANBusStatus canInfo = canBus.getStatus();
+        CANBusStatus canInfo = Constants.RIO_CANBUS.getStatus();
         
         System.out.println("CANInfo BusOffCount     - " + canInfo.BusOffCount);
         System.out.println("CANInfo BusUtilization  - " + canInfo.BusUtilization);

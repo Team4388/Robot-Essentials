@@ -20,4 +20,8 @@ public class ConfigurableDouble {
     public double get() {
         return SmartDashboard.getNumber(name, defualtValue);
     }
+    
+    public void set(double value) {
+        SmartDashboard.putNumber(name, value);
+    }
 }

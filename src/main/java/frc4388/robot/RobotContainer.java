@@ -5,65 +5,53 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc4388.robot;
 
-// Drive Systems
-import edu.wpi.first.wpilibj.DriverStation;
-
 import java.io.File;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc4388.utility.controller.XboxController;
-import frc4388.utility.controller.ButtonBox;
-import frc4388.utility.controller.DeadbandedXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-// Commands
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-// Autos
-import frc4388.utility.controller.VirtualController;
-import frc4388.robot.commands.MoveForTimeCommand;
-import frc4388.robot.commands.MoveUntilSuply;
-import frc4388.robot.commands.alignment.DriveToReef;
-import frc4388.robot.commands.alignment.DriveUntilLiDAR;
-import frc4388.robot.commands.alignment.LidarAlign;
-import frc4388.robot.commands.wait.waitElevatorRefrence;
-import frc4388.robot.commands.wait.waitEndefectorRefrence;
-import frc4388.robot.commands.wait.waitFeedCoral;
-import frc4388.robot.commands.wait.waitSupplier;
-import frc4388.robot.constants.Constants;
-import frc4388.robot.constants.Constants.AutoConstants;
-import frc4388.robot.constants.Constants.LiDARConstants;
-import frc4388.robot.constants.Constants.OIConstants;
-import frc4388.robot.constants.Constants.SimConstants.Mode;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-// Subsystems
-import frc4388.robot.subsystems.LED;
-import frc4388.robot.subsystems.elevator.Elevator;
-import frc4388.robot.subsystems.elevator.Elevator.CoordinationState;
-import frc4388.robot.subsystems.lidar.LiDAR;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// Commands
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc4388.robot.commands.Swerve.StayInPosition;
+import frc4388.robot.constants.Constants;
+import frc4388.robot.constants.Constants.OIConstants;
+import frc4388.robot.constants.Constants.SimConstants.Mode;
+import frc4388.robot.constants.FieldConstants;
+import frc4388.robot.subsystems.intake.Intake;
+import frc4388.robot.subsystems.intake.Intake.IntakeMode;
+import frc4388.robot.subsystems.led.LED;
+import frc4388.robot.subsystems.shooter.Shooter;
+import frc4388.robot.subsystems.shooter.ShooterConstants;
+import frc4388.robot.subsystems.swerve.SimpleSwerveSim;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
-// Utilites
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.FieldPositions;
 import frc4388.utility.compute.TimesNegativeOne;
-import frc4388.utility.compute.ReefPositionHelper.Side;
+import frc4388.utility.controller.DeadbandedXboxController;
+// Autos
+import frc4388.utility.controller.VirtualController;
+import frc4388.utility.controller.XboxController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -75,63 +63,205 @@ import frc4388.utility.compute.ReefPositionHelper.Side;
 public class RobotContainer {
     /* RobotMap */
     
-    public final RobotMap m_robotMap = new RobotMap(Mode.REAL);
+    public final RobotMap m_robotMap = new RobotMap(RobotBase.isReal() ? Mode.REAL : Mode.SIM);
     
+    /*Limit Switch */
+    // public final DigitalInput m_armLimitSwitch = new DigitalInput(9);
+
     /* Subsystems */
-    public final LED m_robotLED = new LED();
-    public final Vision m_vision = new Vision(m_robotMap.leftCamera, m_robotMap.rightCamera);
-    public final Elevator m_robotElevator = new Elevator(m_robotMap.elevatorIO, m_robotLED);
+    // public final Lidar m_lidar = new Lidar();
+    public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
+    public final SimpleSwerveSim m_robotSwerveSIM = new SimpleSwerveSim();
+    //Testing of Colors
+    public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
-    // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
-
-    public final LiDAR reefLidar = new LiDAR(m_robotMap.reefLidar, "Reef");
-    public final LiDAR reverseLidar = new LiDAR(m_robotMap.reverseLidar, "Reverse");
-
+    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO, m_robotSwerveDrive);
+    public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);
+    
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox   = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
-    private final ButtonBox m_buttonBox = new ButtonBox(OIConstants.BUTTONBOX_ID);
+
+
+    // private final ButtonBox m_buttonBox = new ButtonBox(OIConstants.BUTTONBOX_ID);
 
     // public List<Subsystem> subsystems = new ArrayList<>();
+    private final StayInPosition m_stayInPosition = new StayInPosition(m_robotSwerveDrive);
+    
+    private Pose2d currentPose = new Pose2d(0, 0, new Rotation2d());
+        // ! Teleop Commands
+        public void stop() {
+            new InstantCommand(()->{}, m_robotSwerveDrive).schedule();
+            m_robotSwerveDrive.stopModules();
+            Constants.AutoConstants.Y_OFFSET_TRIM.set(0);
+        }
+    
+        // ! /*  Autos */
+        private SendableChooser<String> autoChooser;
+        private Command autoCommand;
+     
 
-    // ! Teleop Commands
-    public void stop() {
-        new InstantCommand(()->{}, m_robotSwerveDrive).schedule();
-        m_robotSwerveDrive.stopModules();
-        Constants.AutoConstants.Y_OFFSET_TRIM.set(0);
-    }
+  
+    
+        
+        public RobotContainer() {
+            // Change bindings here!
 
-    // ! /*  Autos */
-    private SendableChooser<String> autoChooser;
-    private Command autoCommand;
+            configureSINGLEBindings();
+            //configureDOUBLEBindings();
+            
+            // Called on first robot enable
+            DeferredBlock.addBlock(() -> {
+                m_robotSwerveDrive.resetGyro();
+            }, false);
+    
+            // Called on every robot enable
+            DeferredBlock.addBlock(() -> {
+                // m_robotIntake.setMode(IntakeMode.Idle);
+                // m_robotShooter.spinUpIdle();
+                m_robotIntake.io.updateGains();
+                TimesNegativeOne.update();
+                FieldPositions.update();
+                m_robotShooter.io.updateGains();
+            }, true);
+    
+            NamedCommands.registerCommand("WaitShooter", new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed));
+            NamedCommands.registerCommand("AllowShooting", new InstantCommand(() -> m_robotShooter.allowShooting(), m_robotShooter));
+            NamedCommands.registerCommand("DenyShooting", new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter));
+            NamedCommands.registerCommand("SpinUpShooting", new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter));
+            NamedCommands.registerCommand("SpinUpIdle", new InstantCommand(() -> m_robotShooter.spinUpIdle(), m_robotShooter));
+    
+            NamedCommands.registerCommand("BumpOffsetForward", new InstantCommand(() -> {
+                if (TimesNegativeOne.isRed) {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED_FRONT);
+                } else {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE_FRONT);
+                }
+            }));
+
+            NamedCommands.registerCommand("BumpOffsetBackward", new InstantCommand(() -> {
+                if (TimesNegativeOne.isRed) {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED_BACK);
+                } else {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE_BACK);
+                }
+            }));
 
     
-    /**
-     * This method is used to replcate {@link Trigger Triggers} for {@link VirtualController Virtual Controllers}. <p/>
-     * Please use {@link RobotContainer#DualJoystickButton} in {@link RobotContainer#configureButtonBindings} for standard buttons.
-     */
-    private void configureVirtualButtonBindings() {
-
-        // ? /* Driver Buttons */
+            DriverStation.silenceJoystickConnectionWarning(true);
+    
+            // Drive normally
+            m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+                m_robotSwerveDrive.driveWithInput(
+                    getDeadbandedDriverController().getLeft(),
+                    getDeadbandedDriverController().getRight(),true);
+    
+            }, m_robotSwerveDrive)
+            .withName("SwerveDrive DefaultCommand"));
+            
+            m_robotSwerveDrive.setToSlow();
+            
+            makeAutoChooser();
+            SmartDashboard.putData("Auto Chooser", autoChooser);
+    
+        }
         
-        /* Notice: the following buttons have not been replicated
-         * Swerve Drive Slow and Fast mode Gear Shifts : Fast mode is known to cause drift, so we disable that feature in Autoplayback
-         * Swerve Drive Rotation Gear Shifts           : Same reason as Slow and Fast mode.
-         * Auto Recording controls                     : We don't want an Null Ouroboros for an auto.
-         */
+    
+    private void configureDOUBLEBindings() {
 
-        // ? /* Operator Buttons */
+            String controllerInstructions = "Driver Controller: \n- A: Reset Gyro \n- Right Bumper: Shift Up \n- Left Bumper: Shift Down \n\n Operator Controller: \n- X Button: Roller On \n- Y Button: Roller Off \n- B Button: Labubu Growl \n- Right Trigger: Manual shoot \n- Menu Button: Expels balls";
 
-        /* Notice: the following buttons have not been replicated
-         * Override Intake Position Encoder : It's an emergancy overide, for when the position of intake when the robot boots, the intake is not inside the robot.
-         *                                    We don't need it in an auto.
-         * Climbing controls                : We don't need to climb in auto.
-         */
+            SmartDashboard.putString("Controller Binds", controllerInstructions);
+
+            new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+    
+            new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+            
+            new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+
+            new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.spinUpFeeding();
+                m_robotIntake.rollerStop();
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotShooter.spinUpIdle();
+            }));
+
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.ExpelBalls);
+            }));
+
+
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.RollerOn);
+            }));
         
-         // ? Notice: the Programer Buttons are not to be replicated because they are designed for debuging the robot, and do not need to be replicated in auto.
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.RollerOff);
+            }));
 
-    }
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.LabubuGrowl);
+            }));
+        }
+
+
+   private void configureSINGLEBindings() {
+
+            String controllerInstructions = "Single Controller: \n- A: Reset Gyro \n- Right Bumper: Shift Up \n- Left Bumper: Shift Down \n- X Button: Roller On \n- Y Button: Roller Off \n- B Button: Labubu Growl \n- Right Trigger: Manual shoot \n- Menu Button: Expels balls";
+
+            SmartDashboard.putString("Controller Binds", controllerInstructions);
+
+            new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+    
+            new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+            
+            new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+
+            new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.spinUpFeeding();
+                m_robotIntake.rollerStop();
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotShooter.spinUpIdle();
+            }));
+
+            new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.ExpelBalls);
+            }));
+
+
+            new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.RollerOn);
+            }));
+        
+            new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.RollerOff);
+            }));
+
+            new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.LabubuGrowl);
+            }));
+        }
+
+//.onTrue(new InstantCommand(()  -> m_robotLED.setMode(LEDPatterns.SOLID_PINK_HOT)));
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -160,14 +290,14 @@ public class RobotContainer {
     public boolean autoChooserUpdated = false;
     public void makeAutoChooser() {
         autoChooser = new SendableChooser<String>();
-        
+        autoChooser.setDefaultOption("None", "None");
         File dir;
 
         if(RobotBase.isReal()) {
             dir = new File("/home/lvuser/deploy/pathplanner/autos/");
         } else {
             // dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2025RidgeScape\\src\\main\\deploy\\pathplanner\\autos\\");
-            dir = new File("/home/astatin3/Documents/GitHub/2025RidgeScape/src/main/deploy/pathplanner/autos");
+            dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2026KPopRobotHunters\\src\\main\\deploy\\pathplanner\\autos\\");
         }
 
         String[] autos = dir.list();
@@ -182,18 +312,27 @@ public class RobotContainer {
 
         autoChooser.onChange((filename) -> {
             autoChooserUpdated = true;
-            if (filename.equals("Taxi")) {
-                autoCommand = new SequentialCommandGroup(
-                    new MoveForTimeCommand(m_robotSwerveDrive, 
-                        new Translation2d(0, -1), 
-                        new Translation2d(), 1000, true
-                ), new InstantCommand(()-> {m_robotSwerveDrive.softStop();} , m_robotSwerveDrive));
-            } else {
-                autoCommand = new PathPlannerAuto(filename);
+            if (filename == null || filename.equals("None")) {
+                autoCommand = null;
+                return;
             }
+            // if (filename.equals("Taxi%")) {
+            //     autoCommand = new SequentialCommandGroup(
+            //         new MoveForTimeCommand(m_robotSwerveDrive, 
+            //             new Translation2d(0, -1), 
+            //             new Translation2d(), 1000, true
+            //     ), new InstantCommand(()-> {m_robotSwerveDrive.softStop();} , m_robotSwerveDrive));
+            // } else {
+                autoCommand = new PathPlannerAuto(filename);
+            // }
             System.out.println("Robot Auto Changed " + filename);
+
+            //----
+            PathPlannerAuto auto = new PathPlannerAuto(filename);
+            m_robotSwerveDrive.setInitalPose(auto.getStartingPose());
+            //-----
         });
-        // SmartDashboard.putData(autoChooser);
+        SmartDashboard.putData(autoChooser);
 
     }
 
@@ -215,7 +354,7 @@ public class RobotContainer {
         return this.m_operatorXbox;
     }
 
-    public ButtonBox getButtonBox() {
-        return this.m_buttonBox;
-    }
+    // public ButtonBox getButtonBox() {
+    //     return this.m_buttonBox;
+    // }
 }

@@ -185,3 +185,4 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+src/main/java/frc4388/utility/compute/JankCoder copy.java

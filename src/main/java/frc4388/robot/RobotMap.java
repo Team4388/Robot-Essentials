@@ -10,30 +10,35 @@ package frc4388.robot;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import org.photonvision.PhotonCamera;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc4388.robot.constants.Constants.ElevatorConstants;
-import frc4388.robot.constants.Constants.LiDARConstants;
+import frc4388.robot.constants.Constants;
+//import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.robot.constants.Constants.VisionConstants;
-import frc4388.robot.subsystems.elevator.ElevatorIO;
-import frc4388.robot.subsystems.elevator.ElevatorReal;
-import frc4388.robot.subsystems.lidar.LiDAR;
-import frc4388.robot.subsystems.lidar.LidarIO;
-import frc4388.robot.subsystems.lidar.LidarReal;
+import frc4388.robot.subsystems.intake.IntakeConstants;
+import frc4388.robot.subsystems.intake.IntakeIO;
+import frc4388.robot.subsystems.intake.IntakeReal;
+import frc4388.robot.subsystems.shooter.ShooterConstants;
+import frc4388.robot.subsystems.shooter.ShooterIO;
+import frc4388.robot.subsystems.shooter.ShooterReal;
+import frc4388.robot.subsystems.swerve.SimpleSwerveSim;
+// import frc4388.robot.subsystems.elevator.ElevatorIO;
+// import frc4388.robot.subsystems.elevator.ElevatorReal;
 import frc4388.robot.subsystems.swerve.SwerveDriveConstants;
 import frc4388.robot.subsystems.swerve.SwerveIO;
 import frc4388.robot.subsystems.swerve.SwerveReal;
 import frc4388.robot.subsystems.vision.VisionIO;
 import frc4388.robot.subsystems.vision.VisionReal;
+import frc4388.utility.compute.JankCoder;
 import frc4388.utility.status.FaultCANCoder;
 import frc4388.utility.status.FaultPhotonCamera;
 import frc4388.utility.status.FaultPidgeon2;
+import frc4388.utility.status.FaultSparkMax;
 import frc4388.utility.status.FaultTalonFX;
 
 /**
@@ -49,8 +54,8 @@ public class RobotMap {
 
     // public final LiDAR lidar = new 
 
-    public final LidarIO reefLidar;
-    public final LidarIO reverseLidar;
+    // public final LidarIO reefLidar;
+    // public final LidarIO reverseLidar;
 
 
     /* LED Subsystem */
@@ -59,8 +64,9 @@ public class RobotMap {
     /* Swreve Drive Subsystem */
     public final SwerveIO swerveDrivetrain;
 
-    /* Elevator Subsystem */
-    public final ElevatorIO elevatorIO;
+    // /* Shooter and Intake Subsystem */
+    public final ShooterIO shooterIO;
+    public final IntakeIO intakeIO;
 
     public RobotMap(SimConstants.Mode mode) {
         switch (mode) {
@@ -75,9 +81,10 @@ public class RobotMap {
                 FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
                 FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
 
-                // Configure LiDAR
-                reefLidar = new LidarReal(LiDARConstants.REEF_LIDAR_DIO_CHANNEL);
-                reverseLidar = new LidarReal(LiDARConstants.REVERSE_LIDAR_DIO_CHANNEL);
+                // // Configure LiDAR
+                // reefLidar = new LidarReal(LiDARConstants.REEF_LIDAR_DIO_CHANNEL);
+                // reverseLidar = new LidarReal(LiDARConstants.REVERSE_LIDAR_DIO_CHANNEL);
+                DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
 
                 // Configure swerve drive train
                 SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDrivetrainReal = new SwerveDrivetrain<TalonFX, TalonFX, CANcoder> (TalonFX::new, TalonFX::new, CANcoder::new, 
@@ -88,25 +95,32 @@ public class RobotMap {
 
                 swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
-                // Configure elevator
-
-                TalonFX elevator = new TalonFX(ElevatorConstants.ELEVATOR_ID.id);
-                TalonFX endeffector = new TalonFX(ElevatorConstants.ENDEFFECTOR_ID.id);
+                // Configure Shooter 22,23,24
+                TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id, Constants.CANIVORE_CANBUS);
                 
+                //Configure Intake 20,21
+                SparkMax arm = new SparkMax(IntakeConstants.ARM_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.RIO_CANBUS);
+                // DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
+                // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
+                // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
+                // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-                DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
-                DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
-                DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
+                shooterIO = new ShooterReal(shooter1, shooter2, indexer);
+                JankCoder armEncoder = new JankCoder(0, IntakeConstants.ARM_ENCODER_OFFSET);
 
-                elevatorIO = new ElevatorReal(elevator, endeffector, basinLimitSwitch, endeffectorLimitSwitch, IRIntakeBeam);
-
-
-
+                intakeIO = new IntakeReal(armLimitSwitch, arm, roller, armEncoder);
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
-                FaultTalonFX.addDevice(elevator, "Elevator");
-                FaultTalonFX.addDevice(endeffector, "Endeffector");
+                
+                FaultTalonFX.addDevice(shooter1, "Shooter1");
+                FaultTalonFX.addDevice(shooter2, "Shooter2");
+                FaultTalonFX.addDevice(indexer, "Indexer");
+                FaultSparkMax.addDevice(arm, "Arm");
+                FaultTalonFX.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
@@ -122,15 +136,21 @@ public class RobotMap {
                 FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(3).getEncoder(), "Module 3 CANCoder");
 
                 break;
-            // case SIM:
-            //     break;
+            case SIM:
+                leftCamera = new VisionIO() {};
+                rightCamera = new VisionIO() {};
+
+                swerveDrivetrain = new SimpleSwerveSim() {};
+
+                shooterIO = new ShooterIO() {};
+                intakeIO = new IntakeIO() {};
+                break;
             default:
                 leftCamera = new VisionIO() {};
                 rightCamera = new VisionIO() {};
-                reefLidar = new LidarIO() {};
-                reverseLidar = new LidarIO() {};
                 swerveDrivetrain = new SwerveIO() {};
-                elevatorIO = new ElevatorIO() {};
+                intakeIO = new IntakeIO() {};
+                shooterIO = new ShooterIO() {};
                 break;
         }
     }

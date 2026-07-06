@@ -11,6 +11,7 @@ public class ConfigurableString {
      * @param name the name of the Smart Dashboard key.
      * @param defualtValue the initilization value
      */
+
     public ConfigurableString(String name, String defualtValue) {
         this.name = name;
         this.defualtValue = defualtValue;
@@ -20,4 +21,5 @@ public class ConfigurableString {
     public String get() {
         return SmartDashboard.getString(name, defualtValue);
     }
+
 }

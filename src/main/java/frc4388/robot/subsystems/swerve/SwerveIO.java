@@ -7,8 +7,10 @@ import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc4388.robot.subsystems.vision.VisionIO.PoseObservation;
+import frc4388.utility.status.CanDevice;
 
 public interface SwerveIO {
     @AutoLog

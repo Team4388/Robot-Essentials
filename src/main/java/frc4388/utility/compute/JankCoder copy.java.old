@@ -1,0 +1,100 @@
+package frc4388.utility.compute;
+
+import static edu.wpi.first.units.Units.Rotations;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+
+public class JankCoder {
+    DutyCycleEncoder m_encoder;
+
+    boolean loaded_rotations = false;
+    double lastRotation = 0;
+    double offset = 0;
+
+    public JankCoder(int dio_channel) {
+        m_encoder = new DutyCycleEncoder(dio_channel);
+        loadRotations();
+    }
+    public JankCoder(int dio_channel, double _offset) {
+        m_encoder = new DutyCycleEncoder(dio_channel);
+        loadRotations();
+    }
+
+    public void update() {
+        if(!m_encoder.isConnected()) {
+            return;
+        }
+            
+        if(!loaded_rotations) {
+            loadRotations();
+        } else {
+            double curRot = m_encoder.get();
+            if(lastRotation - curRot > 0.5) {
+                offset += 1;
+                saveRotations();
+            } else if (curRot - lastRotation > 0.5) {
+                offset -= 1;
+                saveRotations();
+            }
+
+            lastRotation = curRot;
+        }
+    }
+
+    public double get() {
+        return (double) offset + m_encoder.get();
+    }
+
+    public Angle getRotations() {
+        return Rotations.of(get());
+    }
+    
+    public int getRotationCount() {
+        return (int) offset;
+    }
+    
+    public void resetRotation() {
+        setRotation(0);
+    }
+
+    public void setRotation(double rotation) {
+        offset = rotation - m_encoder.get();
+        saveRotations();
+    }
+
+    private void saveRotations() {
+        try (FileOutputStream stream = new FileOutputStream("/home/lvuser/encoder" + m_encoder.getSourceChannel())) {
+            stream.write(DataUtils.doubleToByteArray(offset));
+        } catch (Exception e) {
+            // e.printStackTrace();
+            System.out.println("ENCODER: Unable to write to trim file `" + m_encoder.getSourceChannel() + "`!?!");
+        }
+    }
+
+    private boolean loadRotations() {
+        lastRotation = m_encoder.get();
+        this.loaded_rotations = true;
+
+        try (FileInputStream stream = new FileInputStream("/home/lvuser/encoder" + m_encoder.getSourceChannel())) {
+            offset = DataUtils.byteArrayToDouble(stream.readNBytes(4));
+            
+            // clampModify();
+            // modified = false;
+
+            // if (fileValue != currentValue) {
+            //     // System.out.println("TRIMS: Loaded trim `" + trimName + "` has a value that is higher than or less than the bounds set for the trim, clamping...");
+            //     // modified = true;
+            // }
+            return true;
+        } catch (Exception e) {
+            // e.printStackTrace();
+            System.out.println("ENCODER: Unable to read encoder `" + m_encoder.getSourceChannel() + "`, using current value...");
+            return false;
+        }
+        
+    }
+}

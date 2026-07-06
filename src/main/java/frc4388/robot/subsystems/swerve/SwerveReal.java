@@ -10,8 +10,11 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.robot.subsystems.vision.VisionIO.PoseObservation;
+import frc4388.utility.status.CanDevice;
 
 public class SwerveReal implements SwerveIO {
     SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDriveTrain;
@@ -40,6 +43,20 @@ public class SwerveReal implements SwerveIO {
         swerveDriveTrain.tareEverything();
     }
 
+    @Override
+    public void resetPose(Pose2d pose) {
+        if (pose == null) return;
+        try {
+            // Preferred: ask the drivetrain to reset its odometry directly
+            System.out.println("!"+pose);
+            swerveDriveTrain.resetPose(pose);
+        } catch (NoSuchMethodError | RuntimeException e) {
+            // Fallback: tare sensors then add a timed vision measurement so odometry is seeded
+            swerveDriveTrain.tareEverything();
+            swerveDriveTrain.addVisionMeasurement(pose, Utils.fpgaToCurrentTime(Vision.getTime()));
+        }
+    }
+    
     @Override
     public void setLimits(double limitInAmps) {
         for (SwerveModule<TalonFX, TalonFX, CANcoder> module : swerveDriveTrain.getModules()) {

@@ -20,8 +20,11 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Angle;
+import frc4388.robot.constants.Constants;
+import frc4388.utility.configurable.ConfigurableDouble;
+//import edu.wpi.first.units.measure.measure.Distance;
 import frc4388.utility.status.CanDevice;
 import frc4388.utility.structs.Gains;
 
@@ -64,6 +67,7 @@ public final class SwerveDriveConstants {
 
     // Operation
     public static final double FORWARD_OFFSET = 90; // 0, 90, 180, 270
+    public static ConfigurableDouble FAR_OFFSET = new ConfigurableDouble("Far Offset", 0.05); // degrees to add to the angle when we are far away, to account for camera misalignment. TODO: find value.
 
     public static final boolean DRIFT_CORRECTION_ENABLED = true;
     public static final boolean INVERT_X = false;
@@ -74,7 +78,7 @@ public final class SwerveDriveConstants {
 
     private static final class ModuleSpecificConstants { //2025
         //Front Left
-        private static final Angle FRONT_LEFT_ENCODER_OFFSET = Rotations.of(-0.368896484375);
+        private static final Angle FRONT_LEFT_ENCODER_OFFSET = Rotations.of(0.49707+0.350-0.03+0.0134+0.06-0.043);
         private static final boolean FRONT_LEFT_DRIVE_MOTOR_INVERTED = false;
         private static final boolean FRONT_LEFT_STEER_MOTOR_INVERTED = true;
         private static final boolean FRONT_LEFT_ENCODER_INVERTED = false;
@@ -82,7 +86,7 @@ public final class SwerveDriveConstants {
         private static final Distance FRONT_LEFT_YPOS = Inches.of(HALF_HEIGHT);
         
         //Front Right
-        private static final Angle FRONT_RIGHT_ENCODER_OFFSET = Rotations.of(-0.011474609375);
+        private static final Angle FRONT_RIGHT_ENCODER_OFFSET = Rotations.of(0.465332+0.3+0.003174-0.0103);
         private static final boolean FRONT_RIGHT_DRIVE_MOTOR_INVERTED = true;
         private static final boolean FRONT_RIGHT_STEER_MOTOR_INVERTED = true;
         private static final boolean FRONT_RIGHT_ENCODER_INVERTED = false;
@@ -90,7 +94,7 @@ public final class SwerveDriveConstants {
         private static final Distance FRONT_RIGHT_YPOS = Inches.of(-HALF_HEIGHT);
 
         //Back Left
-        private static final Angle BACK_LEFT_ENCODER_OFFSET = Rotations.of(0.333251953125+0.5);
+        private static final Angle BACK_LEFT_ENCODER_OFFSET = Rotations.of(0.023438+0.5+0.0168-0.00562);
         private static final boolean BACK_LEFT_DRIVE_MOTOR_INVERTED = false;
         private static final boolean BACK_LEFT_STEER_MOTOR_INVERTED = true;
         private static final boolean BACK_LEFT_ENCODER_INVERTED = false;
@@ -98,7 +102,7 @@ public final class SwerveDriveConstants {
         private static final Distance BACK_LEFT_YPOS = Inches.of(HALF_HEIGHT);
         
         //Back Right
-        private static final Angle BACK_RIGHT_ENCODER_OFFSET = Rotations.of(0.4306640625+0.5);
+        private static final Angle BACK_RIGHT_ENCODER_OFFSET = Rotations.of(0.029541+0.05-0.002197-0.00366);
         private static final boolean BACK_RIGHT_DRIVE_MOTOR_INVERTED = false;
         private static final boolean BACK_RIGHT_STEER_MOTOR_INVERTED = true;
         private static final boolean BACK_RIGHT_ENCODER_INVERTED = false;
@@ -155,6 +159,15 @@ public final class SwerveDriveConstants {
         
         public static final Gains DRIFT_CORRECTION_GAINS = new Gains(2.5, 0, 0.1);
         public static final Gains RELATIVE_LOCKED_ANGLE_GAINS = new Gains(10, 0, 1);
+
+
+
+        // TODO: Replace this with a static constant
+        public static final ConfigurableDouble AIM_kP = new ConfigurableDouble("Aim kP", 12);
+        public static final ConfigurableDouble AIM_kI = new ConfigurableDouble("Aim kI", 0);
+        public static final ConfigurableDouble AIM_kD = new ConfigurableDouble("Aim kD", 0.1);
+        public static final ConfigurableDouble HOLD_POSITION_kP = new ConfigurableDouble("Hold Position kP", 15);
+        // public static final Gains AIM_GAINS = new Gains(2.5, 0, 0.1);
     }
 
     public static final class Configurations {
@@ -195,7 +208,7 @@ public final class SwerveDriveConstants {
     }
 
     public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
-        .withPigeon2Id(IDs.DRIVE_PIGEON.id);
+        .withPigeon2Id(IDs.DRIVE_PIGEON.id).withCANBusName(Constants.CANIVORE_CANBUS.getName());
 
     private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> ConstantCreator =
         new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>() // holy verbosity batman.

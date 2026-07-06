@@ -15,12 +15,16 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import edu.wpi.first.wpilibj.RobotController;
+import com.ctre.phoenix6.SignalLogger;
+
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.robot.constants.BuildConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.HubShiftTimer;
+import frc4388.utility.compute.HubShiftTimer.ShiftInfo;
 import frc4388.utility.compute.RobotTime;
 import frc4388.utility.compute.Trim;
 import frc4388.utility.status.FaultReporter;
@@ -48,6 +52,9 @@ public class Robot extends LoggedRobot {
     // Start logging with AdvantageKit
     startLogging();
 
+    com.revrobotics.util.StatusLogger.disableAutoLogging();
+    SignalLogger.enableAutoLogging(false);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -70,14 +77,12 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {   
     m_robotTime.updateTimes();
-    // SmartDashboard.putNumber("Time", System.currentTimeMillis());
-    
-    m_robotContainer.m_robotLED.update();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
   }
   /**
    * This function is called once each time the robot enters Disabled mode.
@@ -117,6 +122,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.schedule();
     }
     m_robotTime.startMatchTime();
+    HubShiftTimer.initializeAuto();
   }
 
   /**
@@ -129,7 +135,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.stop();
+    // m_robotContainer.stop();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -142,6 +148,7 @@ public class Robot extends LoggedRobot {
 
     }
     m_robotTime.startMatchTime();
+    HubShiftTimer.initializeTeleop();
   }
 
   /**
@@ -149,7 +156,12 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void teleopPeriodic() {
-  //  m_robotContainer.m_robotMap.rightFront.go(m_robotContainer.getDeadbandedDriverController().getLeft());
+    var info = HubShiftTimer.getShiftInfo();
+
+    double rumble = (info.remainingInShift() < 5.  && info.remainingInShift() > 0.1) ? 1 : 0;
+
+    // m_robotContainer.getDeadbandedDriverController().setRumble(RumbleType.kBothRumble, rumble);
+    // m_robotContainer.getDeadbandedOperatorController().setRumble(RumbleType.kBothRumble, rumble);
   }
 
   /**
