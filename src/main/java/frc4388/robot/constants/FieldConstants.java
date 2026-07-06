@@ -10,28 +10,28 @@ import edu.wpi.first.math.geometry.Transform2d;
 public final class FieldConstants {
     public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
     
-    public static final double BUMP_OFFSET = 0.4;
-    public static final Transform2d BUMP_OFFSET_RED_FRONT = new Transform2d(
-        Meters.of(BUMP_OFFSET),
-        Meters.of(0),
-        new Rotation2d()
-    );
-    public static final Transform2d BUMP_OFFSET_BLUE_FRONT = new Transform2d(
-        Meters.of(-BUMP_OFFSET),
-        Meters.of(0),
-        new Rotation2d()
-    );
+    // public static final double BUMP_OFFSET = 0.4;
+    // public static final Transform2d BUMP_OFFSET_RED_FRONT = new Transform2d(
+    //     Meters.of(BUMP_OFFSET),
+    //     Meters.of(0),
+    //     new Rotation2d()
+    // );
+    // public static final Transform2d BUMP_OFFSET_BLUE_FRONT = new Transform2d(
+    //     Meters.of(-BUMP_OFFSET),
+    //     Meters.of(0),
+    //     new Rotation2d()
+    // );
 
-    public static final Transform2d BUMP_OFFSET_RED_BACK = new Transform2d(
-        Meters.of(-BUMP_OFFSET),
-        Meters.of(0),
-        new Rotation2d()
-    );
-    public static final Transform2d BUMP_OFFSET_BLUE_BACK = new Transform2d(
-        Meters.of(BUMP_OFFSET),
-        Meters.of(0),
-        new Rotation2d()
-    );
+    // public static final Transform2d BUMP_OFFSET_RED_BACK = new Transform2d(
+    //     Meters.of(-BUMP_OFFSET),
+    //     Meters.of(0),
+    //     new Rotation2d()
+    // );
+    // public static final Transform2d BUMP_OFFSET_BLUE_BACK = new Transform2d(
+    //     Meters.of(BUMP_OFFSET),
+    //     Meters.of(0),
+    //     new Rotation2d()
+    // );
 
     // Test april tag field layout
         // public static final AprilTagFieldLayout kTagLayout = new AprilTagFieldLayout(

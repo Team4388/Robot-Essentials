@@ -23,9 +23,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.robot.constants.BuildConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.utility.DeferredBlock;
-import frc4388.utility.compute.HubShiftTimer;
-import frc4388.utility.compute.HubShiftTimer.ShiftInfo;
-import frc4388.utility.compute.RobotTime;
 import frc4388.utility.compute.Trim;
 import frc4388.utility.status.FaultReporter;
 
@@ -40,7 +37,6 @@ import frc4388.utility.status.FaultReporter;
 public class Robot extends LoggedRobot {
   Command m_autonomousCommand;
 
-  private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
   //private LED mled = new LED();
   /**
@@ -76,7 +72,6 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotPeriodic() {   
-    m_robotTime.updateTimes();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -91,7 +86,6 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void disabledInit() {
-    m_robotTime.endMatchTime();
   }
 
   @Override
@@ -121,8 +115,6 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    m_robotTime.startMatchTime();
-    HubShiftTimer.initializeAuto();
   }
 
   /**
@@ -147,8 +139,6 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.end(true);
 
     }
-    m_robotTime.startMatchTime();
-    HubShiftTimer.initializeTeleop();
   }
 
   /**
@@ -156,12 +146,6 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    var info = HubShiftTimer.getShiftInfo();
-
-    double rumble = (info.remainingInShift() < 5.  && info.remainingInShift() > 0.1) ? 1 : 0;
-
-    // m_robotContainer.getDeadbandedDriverController().setRumble(RumbleType.kBothRumble, rumble);
-    // m_robotContainer.getDeadbandedOperatorController().setRumble(RumbleType.kBothRumble, rumble);
   }
 
   /**
